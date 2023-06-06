@@ -5,6 +5,6 @@ typedef struct {
 
     int contador;
 
-} Struct;
+} Series;
 
 #endif 
