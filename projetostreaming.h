@@ -5,7 +5,7 @@ typedef struct {
 
     int contador;
 
-}Struct1;  //teste
+}Struct12;  //teste
 
 //a
 
