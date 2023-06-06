@@ -5,6 +5,6 @@ typedef struct {
 
     int contador;
 
-} Struct;
+} Struct;  //teste
 
 #endif 
