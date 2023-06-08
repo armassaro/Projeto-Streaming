@@ -39,6 +39,8 @@ FILE *arquivobin;  //ponteiro que vai apontar para o arquivo binário criado ap�
 
 int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
 
+int yborda, xborda;  //variáveis que guardam as dimensões da janela onde é desenhada a borda
+
 #endif 
 
 /* COISAS NECESSÁRIAS PARA O PROGRAMA: 
