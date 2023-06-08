@@ -1,10 +1,11 @@
-#ifndef projetostreaming.h
-#define projetostreaming.h
+#ifndef projetostreaming
+#define projetostreaming
 
-#include <stdio.h>
+#include <stdio.h>  //bibliotecas que serão usadas no código
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
+#include <stdint.h>
 
 typedef struct {
 
@@ -21,7 +22,7 @@ typedef struct {
 
 } Serie;
 
-Serie *serie;
+Serie *serie; 
 
 typedef struct {
 
@@ -31,7 +32,12 @@ typedef struct {
     int UltimaTemporada;
 
 } Historico;
+
 Historico *historico;
+
+FILE *arquivobin;  //ponteiro que vai apontar para o arquivo binário criado após a primeira execução do código
+
+int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
 
 #endif 
 
@@ -46,6 +52,15 @@ Historico *historico;
 - Salva os dados lidos do arquivo de texto em um novo arquivo binário para que ele possa ser lido nas próximas vezes
 */
 
-/* EXPLICAÇÃO DA BIBLIOTECA DE INTERFACE GRÁFICA -> A biblioteca destinada à interface gráfica ncurses.h produz uma interface gáfica a partir do terminal onde o código está sendo executado. A biblioteca, assim como
+/* EXPLICAÇÃO DA BIBLIOTECA DE INTERFACE GRÁFICA -> A biblioteca destinada à interface gráfica ncurses.h produz uma interface gráfica a partir do terminal onde o código está sendo executado. A biblioteca, assim como
 em uma interface gráfica normal, funciona a partir de janelas, mas no caso do ncurses as janelas são imaginárias e existentes dentro do terminal, onde se pode dimensionar
-as janelas a partir da resolução disponível no terminal, obtida pela função getmaxyx(). */
+as janelas a partir da resolução disponível no terminal, obtida pela função getmaxyx().
+As seguintes funções são as principais e mais usadas no código:
+
+    + mvprintw() = printa uma string dada a localização da janela do terminal
+    + initscr() = inicia o modo ncurses, é essencial para o início do funcionamento da interface
+    + endwin() = fecha a janela principal e fecha o modo ncurses
+    + clear() = limpa a janela principal
+    + refresh() = atualiza a janela principal, é responsável por fazer com que o texto das funções de print e outras funções relacionadas efetivamente apareçam na tela
+    + variantes de funções = as variantes de funções desempenham as mesmas tarefas que as funções apresentadas, mas para outras janelas criadas que não sejam a janela principal
+*/
