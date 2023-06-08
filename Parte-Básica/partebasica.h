@@ -37,7 +37,7 @@ Historico *historico;
 
 FILE *arquivobin;  //ponteiro que vai apontar para o arquivo binário criado após a primeira execução do código
 
-int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
+FILE *arquivotexto;  //ponteiro que vai apontar para o arquivo de texto formatado
 
 #endif 
 
