@@ -1,0 +1,5 @@
+1 - Menu com botões "iniciar" e "sair" 
+2 - Mostra mensagem de boas-vindas, caso não tenha arquivo binário das séries
+3 - Caso já tenha arquivo binário das séries, mostrar menu com opções disponíveis no programa como cadastrar, alterar, remover e listar as séries armazenadas, sendo possível mostrar as informações da série
+4 - Quando mostrar as informações de uma série, mostrar pergunta de "ja assitiu essa série" que deve mostrar outras opções de "sim" ou "não". Se pressionado "sim", perguntar quantas temporadas ja forma vistas, qual o ultimo episodio e qual a ultima temporada assistida. Depois move as informações recolhidas para a struct de histórico
+5 - Salvar os dados das structs de séries e histórico depois que o programa fechar
