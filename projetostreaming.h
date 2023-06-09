@@ -9,7 +9,7 @@
 
 typedef struct {
 
-    int contador;
+    int id;
 
     char Nome[31];
     char Genero[13];
@@ -23,6 +23,8 @@ typedef struct {
 } Serie;
 
 Serie *serie; 
+
+int QuantidadeSeries = 259;
 
 typedef struct {
 
@@ -41,6 +43,9 @@ FILE *arquivobinSeries;  //ponteiro que vai apontar para o arquivo binário cria
 
 FILE *arquivobinHistorico;
 
+char *recebeChar;
+int recebeInt;
+
 WINDOW *borda;
 
 WINDOW *menuopcoes;
@@ -56,7 +61,8 @@ char *stringlogopt3 = " __) |_ | (/_ (_| | | | | | | (_|   |  | (_| | | (_| (_| 
 char *stringlogopt4 = "                               _|                     _|         \n";
 
 void MensagemBoasVindas();
-void MenuSecundario();
+void CadastrarSerie(WINDOW *EntradaInfo);
+void AlterarSerie(WINDOW *EntradaInfo);
 
 #endif 
 
