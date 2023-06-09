@@ -35,11 +35,28 @@ typedef struct {
 
 Historico *historico;
 
-FILE *arquivobin;  //ponteiro que vai apontar para o arquivo binário criado após a primeira execução do código
+FILE *arquivotexto;
+
+FILE *arquivobinSeries;  //ponteiro que vai apontar para o arquivo binário criado após a primeira execução do código
+
+FILE *arquivobinHistorico;
+
+WINDOW *borda;
+
+WINDOW *menuopcoes;
 
 int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
 
 int yborda, xborda;  //variáveis que guardam as dimensões da janela onde é desenhada a borda
+
+// a logo foi separada por strings e sem struct por conta de problemas na programação
+char *stringlogopt1 = "  __                                                             \n";
+char *stringlogopt2 = " (_ _|_ ._ _   _. ._ _  o ._   _    |\\/|  _. ._   _.  _   _  ._ \n";
+char *stringlogopt3 = " __) |_ | (/_ (_| | | | | | | (_|   |  | (_| | | (_| (_| (/_ |   \n";
+char *stringlogopt4 = "                               _|                     _|         \n";
+
+void MensagemBoasVindas();
+void MenuSecundario();
 
 #endif 
 
