@@ -1,15 +1,19 @@
 #include "projetostreaming.h"
 
+/* Este arquivo contém as animações de introdução e mensagem de boas-vindas caso o programa não detecte os 
+arquivos necessários para rodar o mesmo. Caso o programa encontre os arquivos, este programa fecha e prossegue para o arquivo
+menusecundario.c, que abriga o menu com as opções de leitura, cadastro, procura e etc. */
+
 int main() {
 
-    initscr();
-    cbreak();
-    noecho();
-    curs_set(FALSE);
+    initscr();  //inicia o modo ncurses
+    cbreak();  //faz com que a entrada que o usuário enviar para o programa seja imediatamente lida, sem necessidade de dar enter
+    noecho();  //desabilita a visualização da entrada do teclado do usuário no terminal
+    curs_set(FALSE);  //desabilita a visualização do cursor dentro do temrinal
 
-    getmaxyx(stdscr, yterminal, xterminal);
+    getmaxyx(stdscr, yterminal, xterminal);  //coleta as dimensões máximas da janela do terminal
 
-    mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");
+    mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");  //animação de carregamento inicial
     mvprintw((yterminal / 2) - 2, 2, "[");
     mvprintw((yterminal / 2) - 2, xterminal - 2, "]");
     refresh();
@@ -29,7 +33,7 @@ int main() {
 
     }
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //preenche risco com hashtag
+    for(int a = 4; a <= xterminal - 4; a++) {  //preenche os riscos printados com hashtag
 
         mvprintw((yterminal / 2) - 2, a, "#");
         
@@ -39,11 +43,11 @@ int main() {
 
     }
 
-    clear();
+    clear();  //limpa o terminal 
 
-    mvprintw((yterminal / 2) - 2, xterminal / 2, "#");
+    mvprintw((yterminal / 2) - 2, xterminal / 2, "#");  //printa o primeiro hashtag centralizado na tela
 
-    for(int a = yterminal / 2; a <= yterminal - 4; a++) {  //move um asterisco centralizado pra baixo
+    for(int a = yterminal / 2; a <= yterminal - 4; a++) {  //move um hashtag centralizado pra baixo
 
         mvprintw(a, xterminal / 2, "#");
         
@@ -55,7 +59,7 @@ int main() {
 
     }
 
-    for(int a = xterminal / 2; a <= xterminal - 4; a++) {  //move o asterisco pra direita
+    for(int a = xterminal / 2; a <= xterminal - 4; a++) {  //move o hashtag pra direita
 
         mvprintw(yterminal - 4, a, "#");
         
@@ -67,7 +71,7 @@ int main() {
 
     }
 
-    for(int a = yterminal - 4; a >= 4; a--) {  //sobe e preenche coluna direita
+    for(int a = yterminal - 4; a >= 4; a--) {  //sobe e preenche coluna direita com hashtag
 
         mvprintw(a, xterminal - 4, "#");
         
@@ -77,7 +81,7 @@ int main() {
 
     }
 
-    for(int a = xterminal - 4; a >= 4; a--) {  //vai pra esquerda e preenche linha de cima
+    for(int a = xterminal - 4; a >= 4; a--) {  //vai pra esquerda e preenche linha de cima com traço
 
         mvprintw(4, a, "-");
         refresh();
@@ -86,7 +90,7 @@ int main() {
 
     }
 
-    for(int a = 5; a <= yterminal - 4; a++) {  //preenche coluna esquerda
+    for(int a = 5; a <= yterminal - 4; a++) {  //desce e preenche coluna esquerda com hashtag
 
         mvprintw(a, 4, "#");
         
@@ -96,7 +100,7 @@ int main() {
 
     }
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //preenche linha inferior
+    for(int a = 4; a <= xterminal - 4; a++) {  //vai pra direita e preenche linha inferior com traço
 
         mvprintw(yterminal - 4, a, "-");
         refresh();
@@ -105,43 +109,35 @@ int main() {
 
     }
 
-    WINDOW *borda = newwin(yterminal - 7, xterminal - 7, 4, 4);
+    borda = newwin(yterminal - 7, xterminal - 7, 4, 4);  //cria janela para representar a borda desenhada após as animações executadas
 
-    int xborda, yborda;  //variáveis utilizadas para armazenar as dimensões da borda da janela
+    getmaxyx(borda, yborda, xborda);  //coleta as dimensões máximas da janela de borda
 
-    char *stringlogopt1 = "  __                                                             \n";
-    char *stringlogopt2 = " (_ _|_ ._ _   _. ._ _  o ._   _    |\\/|  _. ._   _.  _   _  ._ \n";
-    char *stringlogopt3 = " __) |_ | (/_ (_| | | | | | | (_|   |  | (_| | | (_| (_| (/_ |   \n";
-    char *stringlogopt4 = "                               _|                     _|         \n";
-
-
-    getmaxyx(borda, yborda, xborda);
-
-    mvwprintw(borda, yborda / 2 - 7, xborda / 2 - 30, "%s", stringlogopt1);
+    mvwprintw(borda, yborda / 2 - 7, xborda / 2 - 30, "%s", stringlogopt1);  //printa arte ASCII com nome "Streaming Manager"
     mvwprintw(borda, yborda / 2 - 6, xborda / 2 - 30, "%s", stringlogopt2);
     mvwprintw(borda, yborda / 2 - 5, xborda / 2 - 30, "%s", stringlogopt3);
     mvwprintw(borda, yborda / 2 - 4, xborda / 2 - 30, "%s", stringlogopt4);
 
     wrefresh(borda);
 
-    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha a borda da janela
 
     wrefresh(borda);
 
-    WINDOW *menuopcoes = newwin(10, 15, yterminal / 2 + 1, xterminal / 2 - 5);
+    menuopcoes = newwin(10, 15, yterminal / 2 + 1, xterminal / 2 - 5);  //cria uma janela para abrigar as opções do menu inicial
     refresh();
 
     char *menuescolhas[] = {"Iniciar", "Sair"};
     int opcoes = 2;
-    int opcao;
+    int opcao;  //variável que representa a opção escolhida
     int highlight = 0;
 
-    keypad(menuopcoes, TRUE);
+    keypad(menuopcoes, TRUE);  //habilita coleta de setas do teclado
     werase(menuopcoes);
 
-    while(1) {
+    while(1) {  //loop de seleção das opções dentro do menu
 
-        for(int a = 0; a < opcoes; a++) {
+        for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
 
             if(a == highlight) {
 
@@ -158,7 +154,7 @@ int main() {
         wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
         wrefresh(menuopcoes);
 
-        opcao = wgetch(menuopcoes);
+        opcao = wgetch(menuopcoes);  //coleta a entrada do usuário dentro da janela menuopcoes
 
         switch(opcao) {
 
@@ -173,27 +169,26 @@ int main() {
 
             case KEY_DOWN:
             highlight++;
-            if(highlight >= opcoes) {
+            if(highlight >= opcoes) {  // if que garante que o usuário não selecione opções fora do menu
 
                 highlight = opcoes - 1;
 
             }
             break;
 
-            case '\n': 
-            
+            case '\n':  //case que representa o que cada opção faz
             if (highlight == 0) {
                 
                 clear();
                 refresh();
 
-                arquivobin = fopen("arquivobin.dat", "rb");
+                arquivobinSeries = fopen("arquivobinSeries.dat", "rb");  //tenta abrir o arquivo binário de séries
 
-                if(arquivobin == NULL) {
+                if(arquivobinSeries == NULL) {  //caso falhar, limpa a tela e direciona para a mensagem de boas-vidas
 
                     wclear(stdscr);
                     wclear(borda);
-                    MensagemBoasVindas(yterminal, xterminal, borda, yborda, xborda);
+                    MensagemBoasVindas();
 
                 }
 
@@ -201,8 +196,9 @@ int main() {
                 return 0;
 
             }
-            if(highlight == 1) {
+            if(highlight == 1) {  //se o usuário optar pela opção "não", sai do programa
 
+                endwin();
                 return 0;
 
             }
@@ -211,21 +207,20 @@ int main() {
 
     }
 
-    curs_set(FALSE);
-
-    endwin();
+    endwin();  //fecha o modo ncurses
 
     return 0;
 
 }
 
-void MensagemBoasVindas(int yterminal, int xterminal, WINDOW *borda, int yborda, int xborda) {
+void MensagemBoasVindas() {
 
     refresh();
     wclear(borda);
     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //printa de novo a borda da janela
     wrefresh(borda);  //atualiza a borda 
 
+    // as mensagens são declaradas como strings para que seja possível printar um caractere por vez gerando a animação na mensagem de boas-vindas
     char *mensagem1 = "Seja bem vindo ao Streaming Manager!";
     char *mensagem2 = "O Streaming Manager eh um projeto desenvolvido pelos alunos Arthur Massaro, Pedro Lorin e Matheus Conrado";
     char *mensagem3 = "Por meio deste programa, eh possivel gerenciar suas series favoritas!";
@@ -295,7 +290,7 @@ void MensagemBoasVindas(int yterminal, int xterminal, WINDOW *borda, int yborda,
 
     curs_set(FALSE);
 
-    WINDOW *AlternativaSimNao = newwin(1, 153, (yborda / 2) + 7, 8); 
+    WINDOW *AlternativaSimNao = newwin(1, 153, (yborda / 2) + 7, 8);  //cria janela para abrigar as opções de sim ou não
 
     int opcoes = 2;
     int opcao;
@@ -305,7 +300,7 @@ void MensagemBoasVindas(int yterminal, int xterminal, WINDOW *borda, int yborda,
 
     while(1) {
 
-        for(int a = 0; a < opcoes; a++) {  //imprime sim e nao
+        for(int a = 0; a < opcoes; a++) {  //loop que imprime sim e nao
 
             if(a == highlight) {
 
@@ -327,9 +322,9 @@ void MensagemBoasVindas(int yterminal, int xterminal, WINDOW *borda, int yborda,
             }
         }
 
-        opcao = wgetch(AlternativaSimNao);
+        opcao = wgetch(AlternativaSimNao);  //entrada de caractere
 
-        switch(opcao) {
+        switch(opcao) {  //switch que alterna o efeito de highlight da opção entre as opções disponíveis no menu
 
             case KEY_RIGHT:
             highlight++;
@@ -353,26 +348,102 @@ void MensagemBoasVindas(int yterminal, int xterminal, WINDOW *borda, int yborda,
             
             if (highlight == 0) {
                 
-                wclear(AlternativaSimNao);
-                wprintw(AlternativaSimNao, "sucesso");
-                wrefresh(AlternativaSimNao);
+                wclear(borda);
+                arquivobinSeries = fopen("arquivobinSeries.dat", "wb");
+                arquivobinHistorico = fopen("arquivobinHistorico.dat", "wb");
+                arquivotexto = fopen("streaming_db.csv", "r");
+
+                if(arquivobinSeries == NULL) {  //printa o retorno do ponteiro de arquivo binário das séries
+
+                    clear();
+                    refresh();
+                    x = (xborda - strlen("Houve um erro na criação do arquivo binário de séries. Pressione qualquer tecla.")) / 2;
+                    mvwprintw(borda, yborda / 2 - 2, x, "Houve um erro na criação do arquivo binário de séries. Pressione qualquer tecla.");
+                    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                    wrefresh(borda);
+                
+                }
+                else {
+
+                    clear();
+                    refresh();
+                    x = (xborda - strlen("O arquivo binário de séries foi criado com sucesso!")) / 2;
+                    mvwprintw(borda, yborda / 2 - 2, x, "O arquivo binário de séries foi criado com sucesso!");
+                    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                    wrefresh(borda);
+
+                }
+
+                if(arquivobinHistorico == NULL) {  //printa o retorno do ponteiro de arquivo binário do histórico
+
+                    clear();
+                    refresh();
+                    x = (xborda - strlen("Houve um erro na criação do arquivo binário de histórico. Pressione qualquer tecla.")) / 2;
+                    mvwprintw(borda, yborda / 2 - 1, x, "Houve um erro na criação do arquivo binário de histórico. Pressione qualquer tecla.");
+                    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                    wrefresh(borda);
+                
+                }
+                else {
+
+                    clear();
+                    refresh();
+                    x = (xborda - strlen("O arquivo binário de histórico foi criado com sucesso!")) / 2;
+                    mvwprintw(borda, yborda / 2 - 1, x, "O arquivo binário de histórico foi criado com sucesso!");
+                    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                    wrefresh(borda);
+
+                }
+
+                if(arquivotexto == NULL) {  //printa o retorno do ponteiro de arquivo fonte dos dados das séries
+
+                    clear();
+                    refresh();
+                    x = (xborda - strlen("Houve um erro na leitura do arquivo fonte de dados das séries. Pressione qualquer tecla.")) / 2;
+                    mvwprintw(borda, yborda / 2, x, "Houve um erro na leitura do arquivo fonte de dados das séries. Pressione qualquer tecla.");
+                    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                    wrefresh(borda);
+                
+                }
+                else {
+
+                    clear();
+                    refresh();
+                    x = (xborda - strlen("O arquivo fonte de dados das séries foi lido com sucesso!")) / 2;
+                    mvwprintw(borda, yborda / 2, x, "O arquivo fonte de dados das séries foi lido com sucesso!");
+                    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                    wrefresh(borda);
+
+                }
+
+                if(arquivobinHistorico == NULL || arquivobinSeries == NULL || arquivotexto == NULL) {  //se houver qualquer tipo de erro na abertura de qualquer arquivo, sai do programa
+
+                    getch();
+                    endwin();
+                    exit(1);
+
+                }
+
+                clear();
+                refresh();
+                x = (xborda - strlen("Os arquivos foram lidos e criados com sucesso, pressione qualquer tecla para prosseguir")) / 2;
+                mvwprintw(borda, yborda / 2 + 1, x, "Os arquivos foram lidos e criados com sucesso, pressione qualquer tecla para prosseguir");
+                wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                wrefresh(borda);
                 getch();
-                endwin();
-                exit(1);
+                return;  //volta pra linha 193
 
             }
-            if(highlight == 1) {
 
-                exit(1);
+            if(highlight == 1) {  //caso selecionado não, sai do programa
+
+                endwin();
+                exit(0);
 
             }
             break;
         }
 
     }
-
-    getch();
-
-    return;
 
 }
