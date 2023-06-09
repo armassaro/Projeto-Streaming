@@ -35,9 +35,17 @@ typedef struct {
 
 Historico *historico;
 
-FILE *arquivobin;  //ponteiro que vai apontar para o arquivo binário criado após a primeira execução do código
+FILE *arquivotexto;  //serviŕa para abrir o arquivo fonte com os dados das séries
 
-FILE *arquivotexto;  //ponteiro que vai apontar para o arquivo de texto formatado
+FILE *arquivobinSeries;  //criar arquivo binário como "arquivobinSeries.dat"
+
+FILE *arquivobinHistorico;  //criar arquivo binário como "arquivobinHistorico.dat"
+
+// a logo foi separada por strings e sem struct por conta de problemas na programação
+char *stringlogopt1 = "  __                                                             \n";
+char *stringlogopt2 = " (_ _|_ ._ _   _. ._ _  o ._   _    |\\/|  _. ._   _.  _   _  ._ \n";
+char *stringlogopt3 = " __) |_ | (/_ (_| | | | | | | (_|   |  | (_| | | (_| (_| (/_ |   \n";
+char *stringlogopt4 = "                               _|                     _|         \n";
 
 #endif 
 
