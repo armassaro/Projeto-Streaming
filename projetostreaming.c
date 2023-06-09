@@ -13,101 +13,101 @@ int main() {
 
     getmaxyx(stdscr, yterminal, xterminal);  //coleta as dimensões máximas da janela do terminal
 
-    mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");  //animação de carregamento inicial
-    mvprintw((yterminal / 2) - 2, 2, "[");
-    mvprintw((yterminal / 2) - 2, xterminal - 2, "]");
-    refresh();
+    // mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");  //animação de carregamento inicial
+    // mvprintw((yterminal / 2) - 2, 2, "[");
+    // mvprintw((yterminal / 2) - 2, xterminal - 2, "]");
+    // refresh();
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //tela de carregamento
+    // for(int a = 4; a <= xterminal - 4; a++) {  //tela de carregamento
 
-        mvprintw((yterminal / 2) - 2, a, ">");
+    //     mvprintw((yterminal / 2) - 2, a, ">");
         
-        refresh();
-        usleep(20000);
+    //     refresh();
+    //     usleep(20000);
 
-        mvprintw((yterminal / 2) - 2, a, "|");
+    //     mvprintw((yterminal / 2) - 2, a, "|");
 
-        refresh();
+    //     refresh();
 
-        usleep(5000);
+    //     usleep(5000);
 
-    }
+    // }
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //preenche os riscos printados com hashtag
+    // for(int a = 4; a <= xterminal - 4; a++) {  //preenche os riscos printados com hashtag
 
-        mvprintw((yterminal / 2) - 2, a, "#");
+    //     mvprintw((yterminal / 2) - 2, a, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(6000);
+    //     usleep(6000);
 
-    }
+    // }
 
-    clear();  //limpa o terminal 
+    // clear();  //limpa o terminal 
 
-    mvprintw((yterminal / 2) - 2, xterminal / 2, "#");  //printa o primeiro hashtag centralizado na tela
+    // mvprintw((yterminal / 2) - 2, xterminal / 2, "#");  //printa o primeiro hashtag centralizado na tela
 
-    for(int a = yterminal / 2; a <= yterminal - 4; a++) {  //move um hashtag centralizado pra baixo
+    // for(int a = yterminal / 2; a <= yterminal - 4; a++) {  //move um hashtag centralizado pra baixo
 
-        mvprintw(a, xterminal / 2, "#");
+    //     mvprintw(a, xterminal / 2, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-        clear();
+    //     clear();
 
-    }
+    // }
 
-    for(int a = xterminal / 2; a <= xterminal - 4; a++) {  //move o hashtag pra direita
+    // for(int a = xterminal / 2; a <= xterminal - 4; a++) {  //move o hashtag pra direita
 
-        mvprintw(yterminal - 4, a, "#");
+    //     mvprintw(yterminal - 4, a, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-        clear();
+    //     clear();
 
-    }
+    // }
 
-    for(int a = yterminal - 4; a >= 4; a--) {  //sobe e preenche coluna direita com hashtag
+    // for(int a = yterminal - 4; a >= 4; a--) {  //sobe e preenche coluna direita com hashtag
 
-        mvprintw(a, xterminal - 4, "#");
+    //     mvprintw(a, xterminal - 4, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
-    for(int a = xterminal - 4; a >= 4; a--) {  //vai pra esquerda e preenche linha de cima com traço
+    // for(int a = xterminal - 4; a >= 4; a--) {  //vai pra esquerda e preenche linha de cima com traço
 
-        mvprintw(4, a, "-");
-        refresh();
+    //     mvprintw(4, a, "-");
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
-    for(int a = 5; a <= yterminal - 4; a++) {  //desce e preenche coluna esquerda com hashtag
+    // for(int a = 5; a <= yterminal - 4; a++) {  //desce e preenche coluna esquerda com hashtag
 
-        mvprintw(a, 4, "#");
+    //     mvprintw(a, 4, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //vai pra direita e preenche linha inferior com traço
+    // for(int a = 4; a <= xterminal - 4; a++) {  //vai pra direita e preenche linha inferior com traço
 
-        mvprintw(yterminal - 4, a, "-");
-        refresh();
+    //     mvprintw(yterminal - 4, a, "-");
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
     borda = newwin(yterminal - 7, xterminal - 7, 4, 4);  //cria janela para representar a borda desenhada após as animações executadas
 
@@ -351,7 +351,7 @@ void MensagemBoasVindas() {
                 wclear(borda);
                 arquivobinSeries = fopen("arquivobinSeries.dat", "wb");
                 arquivobinHistorico = fopen("arquivobinHistorico.dat", "wb");
-                arquivotexto = fopen("streaming_db.csv", "r");
+                arquivotexto = fopen("streaming_db.txt", "r");
 
                 if(arquivobinSeries == NULL) {  //printa o retorno do ponteiro de arquivo binário das séries
 
@@ -431,7 +431,8 @@ void MensagemBoasVindas() {
                 wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
                 wrefresh(borda);
                 getch();
-                return;  //volta pra linha 193
+                wclear(borda);
+                return;  //volta pra linha 191
 
             }
 
