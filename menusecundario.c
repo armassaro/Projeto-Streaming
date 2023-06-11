@@ -22,65 +22,85 @@ int main() {
 
     WINDOW *EntradaInfo = newwin(3, xborda - 30, yterminal / 2, (xterminal - (xborda - 30)) / 2);
 
-    refresh();
-    clear();
-    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
-    mvprintw(yterminal / 2, xterminal / 2, "Transferência de informações entre arquivos, aguarde um momento...");
-    refresh();
+    for (int i = 0; i < QuantidadeSeries; i++) {
 
-    // LOOP DE TRANSFERENCIA DE INFORMAÇÃOES ENTRE ARQUIVOS
+        fscanf(arquivotexto, "%d,", &serie[i].id);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Nome);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Genero);
+        fscanf(arquivotexto, "%d,", &serie[i].Classificacao);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Plataforma);
+        fscanf(arquivotexto, "%d,", &serie[i].DuracaoMediaEpisodios);
+        fscanf(arquivotexto, "%d,", &serie[i].QuantidadeTemporadas);
+
+        int realoca = serie[i].QuantidadeTemporadas;
+        serie[i].QuantidadeEpisodiosPorTemporada = malloc(realoca * sizeof(int));
+
+        for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
+
+            fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
+
+        }
+
+    }
 
     menuopcoes = newwin(8, 23, yterminal / 2 + 1, xterminal / 2 - 9);
-    
-    wclear(borda);
-    //printa novamente a arte ASCII do menu inicial
-
-
-    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar as series", "Listar por genero", "Sair"};
-    int opcoes = 6;
-    int opcao;
-    int highlight = 0;
 
     keypad(menuopcoes, TRUE);  //habilita entrada de setas
     werase(menuopcoes);
 
-    while(1) {
+    MenuSecundario(EntradaInfo);
 
-        curs_set(FALSE); //desabilita o cursor, limpa a janela e printa logo e menu com opções
-        wclear(borda);
-        wrefresh(borda);
+    endwin();
+    return 0;
+
+}
+
+void MenuSecundario(WINDOW *EntradaInfo) {
+
+    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar", "Listar por Genero",  "Sair"};
+    int opcoes = 6;
+    int opcao;
+    int highlight = 0;
+
+    while(1) { 
+    
+    cbreak();
+    noecho();
+    curs_set(FALSE); //desabilita o cursor, limpa a janela e printa logo e menu com opções
+    wclear(borda);
+    wrefresh(borda);
         
-        mvwprintw(borda, yborda / 2 - 7, xborda / 2 - 30, "%s", stringlogopt1);
-        mvwprintw(borda, yborda / 2 - 6, xborda / 2 - 30, "%s", stringlogopt2);
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 - 30, "%s", stringlogopt3);
-        mvwprintw(borda, yborda / 2 - 4, xborda / 2 - 30, "%s", stringlogopt4);
-        wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha noavmente a borda da janela
-        wrefresh(borda);
+    mvwprintw(borda, yborda / 2 - 7, xborda / 2 - 30, "%s", stringlogopt1);
+    mvwprintw(borda, yborda / 2 - 6, xborda / 2 - 30, "%s", stringlogopt2);
+    mvwprintw(borda, yborda / 2 - 5, xborda / 2 - 30, "%s", stringlogopt3);
+    mvwprintw(borda, yborda / 2 - 4, xborda / 2 - 30, "%s", stringlogopt4);
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha noavmente a borda da janela
+    wrefresh(borda);
 
-        for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
+    for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
 
-            if(a == highlight) {
+        if(a == highlight) {
 
-                wattron(menuopcoes, A_REVERSE);
-
-            }
-
-            int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
-            mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
-            wattroff(menuopcoes, A_REVERSE);
+            wattron(menuopcoes, A_REVERSE);
 
         }
 
-        wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-        wrefresh(menuopcoes);
+        int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
+        mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
+        wattroff(menuopcoes, A_REVERSE);
 
-        opcao = wgetch(menuopcoes);
+    }
 
-        switch(opcao) {
+    wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(menuopcoes);
 
-            case KEY_UP:
-            highlight--;
-            if(highlight < 0) {
+    opcao = wgetch(menuopcoes);
+
+    switch(opcao) {
+
+        case KEY_UP:
+        highlight--;
+           if(highlight < 0) {
 
                 highlight = 0;
 
@@ -89,7 +109,7 @@ int main() {
 
             case KEY_DOWN:
             highlight++;
-            if(highlight >= opcoes) {  // if que garante que o usuário não selecione opções fora do menu
+            if(highlight > opcoes) {  // if que garante que o usuário não selecione opções fora do menu
 
                 highlight = opcoes - 1;
 
@@ -97,61 +117,90 @@ int main() {
             break;
 
             case '\n':  //case que representa o que cada opção faz
-            if (highlight == 0) {
+            switch(highlight) {
 
+                case 0:
                 CadastrarSerie(EntradaInfo);
+                break;
 
-            }
+                case 1:
+                //AlterarSerie(EntradaInfo);
+                break;
 
-            if(highlight == 1) {  //se o usuário optar pela opção "não", sai do programa
+                case 2:
+                //RemoverSerie(EntradaInfo);
+                break;
 
-                AlterarSerie(EntradaInfo);
+                case 3:
+                //ListaSerie(EntradaInfo);
+                break;
 
-            }
-            if(highlight == 3) {
+                case 4:
+                // ListarPorGenero(EntradaInfo);
+                break;
 
-                clear();
-                wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha novamente a borda da janela
-                wrefresh(borda);
-
-                
-            }
-            if(highlight == 5) {
-
-                clear();
-                refresh();
+                case 5:
                 endwin();
                 exit(0);
+                break;
+
+                default:
+                break;
 
             }
             break;
+
+            default:
+            break;
+            
         }
 
     }
 
-
 }
+
 
 void CadastrarSerie(WINDOW *EntradaInfo) {
 
-    wclear(borda);
-    wrefresh(borda);
+    setbuf(stdin, NULL);
     curs_set(TRUE);
-    nocbreak();
+    cbreak();
     echo();
+    QuantidadeSeries++;
+    char StringAux[4]; //string auxiliar para coleta de inteiro
+    serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));  //realoca para novo tamanho
+    serie[QuantidadeSeries - 1].id = QuantidadeSeries;  //atribuição de id para a nova série a ser colocada
 
-    QuantidadeSeries = QuantidadeSeries + 1;
-
+    ColetaNome:
+    clear();
+    refresh();
+    wclear(borda);
     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
     wrefresh(borda);
-
     wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
     wrefresh(EntradaInfo);
-
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o nome da serie a ser cadastrada")) / 2, "Digite o nome da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(serie[QuantidadeSeries - 1].Nome, 30);  //função de coleta de string pra biblioteca ncurses q nn deixa caractere \n como final
+    setbuf(stdin, NULL);
+
+    for (int i = 0; i < QuantidadeSeries - 1; i++) { 
+
+        if (strcasecmp(serie[i].Nome, serie[QuantidadeSeries - 1].Nome) == 0)
+        {
+
+            wclear(borda);
+            wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+            mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Essa serie ja esta cadastrada, digite outro nome")) / 2, "Essa serie ja esta cadastrada, digite outro nome");
+            wrefresh(borda);
+            getch();
+            goto ColetaNome;
+
+        }
+
+    }
 
     clear();
     refresh();
@@ -162,7 +211,9 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o genero da serie a ser cadastrada")) / 2, "Digite o genero da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    getnstr(serie[QuantidadeSeries - 1].Genero, 12);
+    refresh();
+    setbuf(stdin, NULL);
 
     clear();
     refresh();
@@ -173,7 +224,9 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a idade da classificacao da serie a ser cadastrada")) / 2, "Digite a idade da classificacao da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(StringAux, 2);
+    serie[QuantidadeSeries - 1].Classificacao = atoi(StringAux); //função de conversão de string para inteiro
 
     clear();
     refresh();
@@ -185,7 +238,9 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a plataforma da serie a ser cadastrada")) / 2, "Digite a plataforma da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(serie[QuantidadeSeries-1].Plataforma, 12);
+    setbuf(stdin, NULL);
 
     clear();
     refresh();
@@ -197,7 +252,10 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a quantidade de temporadas da serie a ser cadastrada")) / 2, "Digite a quantidade de temporadas da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(StringAux, 2);
+    serie[QuantidadeSeries - 1].QuantidadeTemporadas = atoi(StringAux);
+    setbuf(stdin, NULL);
 
     clear();
     refresh();
@@ -209,7 +267,15 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a quantidade total de episodios da serie a ser cadastrada")) / 2, "Digite a quantidade total de episodios da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(StringAux, 4);
+    serie[QuantidadeSeries - 1].QuantidadeEpisodiosTotais = atoi(StringAux);
+    setbuf(stdin, NULL);
+
+    int realoca = serie[QuantidadeSeries - 1].QuantidadeTemporadas;
+    serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
+
+    for(int a = 0; a < serie[QuantidadeSeries-1].QuantidadeTemporadas; a++) { 
 
     clear();
     refresh();
@@ -218,10 +284,15 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     wrefresh(borda);
     wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
     wrefresh(EntradaInfo);
-    mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a quantidade de episodios por temporada da serie a ser cadastrada")) / 2, "Digite a quantidade de episodios por temporada da serie a ser cadastrada");
+    mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a quantidade de episodios por temporada da serie a ser cadastrada. Temporada  :")) / 2, "Digite a quantidade de episodios por temporada da serie a ser cadastrada. Temporada %i: ", a + 1);
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(StringAux, 3);
+    serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada[a] = atoi(StringAux);
+    setbuf(stdin, NULL);
+
+    }
 
     clear();
     refresh();
@@ -233,59 +304,122 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite a duracao media dos episodios da serie a ser cadastrada")) / 2, "Digite a duracao media dos episodios da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getch();
+    refresh();
+    getnstr(StringAux, 3);
+    serie[QuantidadeSeries - 1].DuracaoMediaEpisodios = atoi(StringAux);
 
     return;
 
 }
 
-void ListarPorGenero() {
+// void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
 
-    wclear(menuopcoes);
-    wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
+//     wclear(menuopcoes);
+//     wrefresh(menuopcoes);
+//     char StringAux[12];
+//     keypad(menuopcoes, TRUE);
+//     int opcoesMax;
+//     int opcoesMin = 0;
+//     int opcao;
+//     int highlight = 0;
 
-    char *menuescolhas[] = {"Western Espacial", "Drama", "Fantasia", "Humor Ácido", "Suspense", "Ficção Cientifica", "Drama médico", "Comedia", "Ação", "Comédia", "Ficção ", "Terror/Drama", "Criança", "comédia", "Terror", "Documentário", "Ação ", "Ficção Científica", "Mistério", "Drama Médico", "terror", "drama", "Sitcom", "Fantasia Cientifíca", "Crime Drama", "Comédia/Romance", "Misterio ", "Suspense / Fantasia", "Infantil", "Humor", "Drama / Ação", "Drama / Suspense", "Açao", "Superhero", "Crime Real", "Comédia/Animação", "Comédia/Sitcom", "Suspense/Ação", "Comédia Dramatica", "Crime", "Drama Mistério", "Policial", "Sticom", "Ficção cientifica", "Ação/Super Heroi", "Sci-Fi", "Ficção científica", "Reality Show", "Suspense / Drama", "Comédia/Politica", "Drama/Terror", "Suspence", "Ficção", "Ação/Aventura"};
-    int opcoes = sizeof(*menuescolhas);
-    int opcao;
-    int highlight = 0;
+//     clear();
+//     refresh();
+//     wclear(borda);
+//     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+//     wrefresh(borda);
+//     wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
+//     wrefresh(EntradaInfo);
+//     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o gênero que queira lista as séries")) / 2, "Digite o gênero que queira listar as séries");
+//     wrefresh(borda);
+//     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
+//     refresh();
+//     getnstr(StringAux, 12);
+//     setbuf(stdin, NULL);
 
-        for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
+//     for(int a = 0; a < QuantidadeSeries; a++) {
 
-            if(a == highlight) {
 
-                wattron(menuopcoes, A_REVERSE);
+//     }
 
-            }
+//     for(int a = opcoesMin; a < opcoesMax; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
 
-            int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
-            mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
-            wattroff(menuopcoes, A_REVERSE);
+//         if(a == highlight) {
 
-        }
+//             wattron(menuopcoes, A_REVERSE);
 
-        wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-        wrefresh(menuopcoes);
+//         }
 
-        opcao = wgetch(menuopcoes);
+//         int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
+//         mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
+//         wattroff(menuopcoes, A_REVERSE);
 
-        switch(opcao) {
+//     }
 
-            case KEY_UP:
-            highlight--;
-            if(highlight < 0) {
+//     wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
+//     wrefresh(menuopcoes);
 
-                highlight = 0;
+//     opcao = wgetch(menuopcoes);
 
-            }
-            break;
+//     switch(opcao) {
 
-            case KEY_DOWN:
-            highlight++;
-            if(highlight >= opcoes) {  // if que garante que o usuário não selecione opções fora do menu
+//         case KEY_UP:
+//         highlight--;
+//            if(highlight < 0) {
 
-                highlight = opcoes - 1;
+//                 highlight = 0;
 
-            }
-            break;
-}
-}
+//             }
+//             break;
+
+//             case KEY_DOWN:
+//             highlight++;
+//             if(highlight > opcoes) {  // if que garante que o usuário não selecione opções fora do menu
+
+//                 highlight = opcoes - 1;
+
+//             }
+//             break;
+
+//             case '\n':  //case que representa o que cada opção faz
+//             switch(highlight) {
+
+//                 case 0:
+//                 CadastrarSerie(EntradaInfo);
+//                 break;
+
+//                 case 1:
+//                 //AlterarSerie(EntradaInfo);
+//                 break;
+
+//                 case 2:
+//                 //RemoverSerie(EntradaInfo);
+//                 break;
+
+//                 case 3:
+//                 //ListaSerie(EntradaInfo);
+//                 break;
+
+//                 case 4:
+//                 ListarPorGenero(EntradaInfo);
+//                 break;
+
+//                 case 5:
+//                 endwin();
+//                 exit(0);
+//                 break;
+
+//                 default:
+//                 break;
+
+//             }
+//             break;
+
+//             default:
+//             break;
+            
+//         }
+
+//     }
+
+// }
