@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <stdint.h>
+#include <time.h>
 
 typedef struct {
 
@@ -13,7 +14,7 @@ typedef struct {
 
     char Nome[31];
     char Genero[13];
-    int Classificao;
+    int Classificacao;
     char Plataforma[13];
     int QuantidadeTemporadas;
     int QuantidadeEpisodiosTotais;
@@ -60,9 +61,16 @@ char *stringlogopt2 = " (_ _|_ ._ _   _. ._ _  o ._   _    |\\/|  _. ._   _.  _ 
 char *stringlogopt3 = " __) |_ | (/_ (_| | | | | | | (_|   |  | (_| | | (_| (_| (/_ |   \n";
 char *stringlogopt4 = "                               _|                     _|         \n";
 
-void MensagemBoasVindas();
-void CadastrarSerie(WINDOW *EntradaInfo);
-void AlterarSerie(WINDOW *EntradaInfo);
+void MensagemBoasVindas();  //função utilizada em projetostreaming.c, com animações d emensagem de
+
+//funções de menusecundario.c
+// void MenuSecundario();
+// void CadastrarSerie();
+// void AlterarSerie();
+// void RemoverSerie();
+// void ListaSerie();
+// void ListarPorGenero();
+// void PesquisaSerie();
 
 #endif 
 
