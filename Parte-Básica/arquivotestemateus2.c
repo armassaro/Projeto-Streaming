@@ -14,12 +14,12 @@ typedef struct {
     int QuantidadeEpisodiosTotais;
     int *QuantidadeEpisodiosPorTemporada;
     int DuracaoMediaEpisodios;
-    
+
 } Serie;
 
-void lerSeries(Serie *serie, int capacidade, FILE *arquivo) {
+void lerSeries(Serie *serie, int QuantidadeSeries, FILE *arquivo) {
 
-    for (int i = 0; i < capacidade; i++) 
+    for (int i = 0; i < QuantidadeSeries; i++) 
     {
         fscanf(arquivo, "%d,", &serie[i].id);
         fscanf(arquivo, "%[^,\n],", serie[i].Nome);
@@ -39,10 +39,10 @@ void lerSeries(Serie *serie, int capacidade, FILE *arquivo) {
     }
 }
 
-void imprimirSeries(Serie *serie, int capacidade)
+void imprimirSeries(Serie *serie, int QuantidadeSeries)
 {
     printf("Aqui estao todas series cadastradas\n");
-    for (int i = 0; i < capacidade; i++) 
+    for (int i = 0; i < QuantidadeSeries; i++) 
     {
         printf("%d-", serie[i].id);
         printf("%-40s " , serie[i].Nome);
@@ -66,66 +66,70 @@ void imprimirSeries(Serie *serie, int capacidade)
 }
 
 
-void cadastrar(int capacidade , Serie *serie)
+int cadastrar(int QuantidadeSeries , Serie *serie)
 {
-    capacidade++;
+    QuantidadeSeries++;
   
-    serie = (Serie*)realloc(serie, capacidade * sizeof(Serie));
-    serie[capacidade-1].id= capacidade;
+    serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));
+    serie[QuantidadeSeries - 1].id= QuantidadeSeries;
     setbuf(stdin,NULL);
  
     printf("digite o nome da serie\n:");
-    fgets(serie[capacidade-1].Nome, sizeof(serie[capacidade-1].Nome), stdin);
-    serie[capacidade-1].Nome[strcspn(serie[capacidade-1].Nome, "\n")] = '\0';
+    fgets(serie[QuantidadeSeries - 1].Nome, 30, stdin);
+    serie[QuantidadeSeries - 1].Nome[strcspn(serie[QuantidadeSeries-1].Nome, "\n")] = '\0';
     setbuf(stdin, NULL);
 
-    for (int i = 0; i < capacidade - 1; i++)
+    for (int i = 0; i < QuantidadeSeries - 1; i++)
     {
-        if (strcasecmp(serie[i].Nome, serie[capacidade-1].Nome) == 0)
+        if (strcasecmp(serie[i].Nome, serie[QuantidadeSeries - 1].Nome) == 0)
         {
+
             printf("Essa série já está cadastrada. Por favor, insira outro nome.\n");
-            capacidade--;  // Diminuir o tamanho para cancelar o cadastro da série repetida
-            return cadastrar(capacidade,serie );  
+            QuantidadeSeries--;  // Diminuir o tamanho para cancelar o cadastro da série repetida
+            return QuantidadeSeries;  
+
         }
     }
 
     printf("digite o genero\n:");
-    fgets(serie[capacidade - 1].Genero, sizeof(serie[capacidade-1].Genero), stdin);
-    serie[capacidade - 1].Genero[strcspn(serie[capacidade-1].Genero, "\n")] = '\0';
+    fgets(serie[QuantidadeSeries - 1].Genero, 12, stdin);
+    serie[QuantidadeSeries - 1].Genero[strcspn(serie[QuantidadeSeries-1].Genero, "\n")] = '\0';
     setbuf(stdin, NULL);
 
     printf("digite a classificacao\n");
-    scanf("%d", &serie[capacidade - 1].Classificacao);
+    scanf("%d", &serie[QuantidadeSeries - 1].Classificacao);
     
     setbuf(stdin, NULL);
     printf("digite plataforma\n");
-    fgets(serie[capacidade-1].Plataforma, sizeof(serie[capacidade-1].Plataforma), stdin);
-    serie[capacidade-1].Plataforma[strcspn(serie[capacidade-1].Plataforma, "\n")] = '\0';
+    fgets(serie[QuantidadeSeries-1].Plataforma, 12, stdin);
+    serie[QuantidadeSeries-1].Plataforma[strcspn(serie[QuantidadeSeries-1].Plataforma, "\n")] = '\0';
     setbuf(stdin, NULL);
 
     printf("diga a dura;'ao media\n:");
-    scanf("%d", &serie[capacidade - 1].DuracaoMediaEpisodios);
+    scanf("%d", &serie[QuantidadeSeries - 1].DuracaoMediaEpisodios);
     
     printf("digite a quantia de temporadas\n:");
-    scanf("%d", &serie[capacidade - 1].QuantidadeTemporadas);
+    scanf("%d", &serie[QuantidadeSeries - 1].QuantidadeTemporadas);
 
 
-        int realoca = serie[capacidade - 1].QuantidadeTemporadas;
-       serie[capacidade-1].QuantidadeEpisodiosPorTemporada = malloc(realoca * sizeof(int));
-     for (int i = 0; i < serie[capacidade-1].QuantidadeTemporadas; i++)
-    {   
+    int realoca = serie[QuantidadeSeries - 1].QuantidadeTemporadas;
+    serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada = malloc(realoca * sizeof(int));
+    
+    for (int i = 0; i < serie[QuantidadeSeries-1].QuantidadeTemporadas; i++)
+    { 
+
         printf("digite a quantia de episodios da %d temporada:",i+1);
-        scanf("%d",&serie[capacidade-1].QuantidadeEpisodiosPorTemporada[i]);
+        scanf("%d", &serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada[i]);
+
     }  
-   
 
-
+    return QuantidadeSeries;
 
 }
 
 
 
-void apagar(int capacidade, Serie *serie)
+void apagar(int QuantidadeSeries, Serie *serie)
 {
     char deletar[101];
     int encontrar=0;
@@ -137,7 +141,7 @@ void apagar(int capacidade, Serie *serie)
     deletar[strcspn(deletar, "\n")] = '\0';
     setbuf(stdin, NULL);
 
-    for (int i = 0; i < capacidade ; i++)
+    for (int i = 0; i < QuantidadeSeries ; i++)
     {
         contador++;
         if (strcasecmp(deletar, serie[i].Nome) != 0)
@@ -156,17 +160,17 @@ void apagar(int capacidade, Serie *serie)
         {
             printf("serie n encontrada, tente outro nome\n");
             
-            apagar(capacidade,serie);
+            apagar(QuantidadeSeries,serie);
         }else
         {
 
             serie[contador].id=contador+1;
-            strcpy(serie[contador].Nome,serie[capacidade - 1].Nome);
-            strcpy(serie[contador].Genero, serie[capacidade - 1].Genero);
-            serie[contador].Classificacao=serie[capacidade-1].Classificacao;
-            strcpy(serie[contador].Plataforma, serie[capacidade - 1].Plataforma);
-            serie[contador].DuracaoMediaEpisodios=serie[capacidade -1].DuracaoMediaEpisodios;
-            serie[contador].QuantidadeTemporadas=serie[capacidade-1].QuantidadeTemporadas;
+            strcpy(serie[contador].Nome,serie[QuantidadeSeries - 1].Nome);
+            strcpy(serie[contador].Genero, serie[QuantidadeSeries - 1].Genero);
+            serie[contador].Classificacao=serie[QuantidadeSeries-1].Classificacao;
+            strcpy(serie[contador].Plataforma, serie[QuantidadeSeries - 1].Plataforma);
+            serie[contador].DuracaoMediaEpisodios=serie[QuantidadeSeries -1].DuracaoMediaEpisodios;
+            serie[contador].QuantidadeTemporadas=serie[QuantidadeSeries-1].QuantidadeTemporadas;
 
 
             int realoca = serie[contador].QuantidadeTemporadas;
@@ -174,15 +178,15 @@ void apagar(int capacidade, Serie *serie)
             
             for(int i = 0; i <realoca; i++)
             {
-                serie[contador].QuantidadeEpisodiosPorTemporada[i]=serie[capacidade-1].QuantidadeEpisodiosPorTemporada[i];
+                serie[contador].QuantidadeEpisodiosPorTemporada[i]=serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada[i];
             }
             
             
 
-            capacidade--;
+            QuantidadeSeries--;
             
-            serie = (Serie *)realloc(serie, capacidade * sizeof(Serie));
-            imprimirSeries(serie, capacidade);
+            serie = (Serie *)realloc(serie, QuantidadeSeries * sizeof(Serie));
+            imprimirSeries(serie, QuantidadeSeries);
 
           
         }
@@ -194,8 +198,8 @@ void apagar(int capacidade, Serie *serie)
 
 int main() {
     
-    int capacidade = 258;
-    Serie *serie = (Serie*) malloc(capacidade * sizeof(Serie));
+    int QuantidadeSeries = 258;
+    Serie *serie = (Serie*) malloc(QuantidadeSeries * sizeof(Serie));
 
     FILE *arquivo = fopen("streaming_db.txt", "r");
 
@@ -204,12 +208,10 @@ int main() {
         return 1;
     }
 
-    lerSeries(serie, capacidade, arquivo);
-    //imprimirSeries(serie, capacidade);
-    //cadastrar(&capacidade,&serie );
-    apagar(capacidade, serie);
-
-    free(serie);
+    lerSeries(serie, QuantidadeSeries, arquivo);
+    imprimirSeries(serie, QuantidadeSeries);
+    QuantidadeSeries = cadastrar(QuantidadeSeries, serie);
+    apagar(QuantidadeSeries, serie);
 
     fclose(arquivo);
 
