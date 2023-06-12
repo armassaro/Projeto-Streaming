@@ -132,7 +132,8 @@ void MenuSecundario(WINDOW *EntradaInfo) {
                 break;
 
                 case 3:
-                //ListaSerie(EntradaInfo);
+                wclear(menuopcoes);
+                ListaSerie();
                 break;
 
                 case 4:
@@ -677,38 +678,75 @@ void RemoverSerie(WINDOW *EntradaInfo) {
 
 }
 
-void ListaSerie(WINDOW *EntradaInfo) {
-
+void ListaSerie() {
     keypad(borda, TRUE);
+    cbreak();
     curs_set(FALSE);
 
-    int OpcoesMin = 0;
-    int OpcoesMax = 30;
+    unsigned int OpcoesMin = 0;
+    unsigned int OpcoesMax = 30;
     int highlight = 0;
     int opcao;
+    int yopcao = 0;
 
-    for(int a = OpcoesMin; a < OpcoesMax; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
+    while (1) {
+        wclear(borda);
+        yopcao = 0;
 
-        if(a == highlight) {
+        for (int a = OpcoesMin; a < OpcoesMax; a++) {
+            if (a == highlight) {
+                wattron(borda, A_REVERSE);
+            }
 
-            wattron(borda, A_REVERSE);
+            int x = (23 - strlen(serie[a].Nome)) / 2;
+            mvwprintw(borda, yopcao + 1, x, "%s", serie[a].Nome);
+            wattroff(borda, A_REVERSE);
+            yopcao++;
+        }
+
+        wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "ID: %i", serie[highlight].id);
+        mvwprintw(borda, yborda / 2 - 3, xborda / 2 + 5, "Genero: %s", serie[highlight].Genero);
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Classificacao: %i", serie[highlight].id);
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Plataforma: %i", serie[highlight].Plataforma);
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Quantidade de temporadas: %i", serie[highlight].QuantidadeTemporadas);
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Quantidade de episodios por temporada:");
+        
+        for(int a = 0; a < serie[highlight].QuantidadeTemporadas; a++) {
+
+            printw(borda, "%i ", serie[highlight].QuantidadeEpisodiosPorTemporada[a]);
 
         }
 
-        int x = (23 - strlen(serie[OpcoesMin].Nome)) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
-        mvwprintw(borda, a + 1, x, "%s", serie[OpcoesMin].Nome);
-        wattroff(borda, A_REVERSE);
+        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Duracao media dos episodios: %i", serie[highlight].DuracaoMediaEpisodios);
+        wrefresh(borda);
 
-    }
+        opcao = wgetch(menuopcoes);
 
-    wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-    wrefresh(menuopcoes);
+        switch (opcao) {
+            case KEY_DOWN:
+                highlight++;
+                if (highlight >= OpcoesMax) {
 
-    opcao = wgetch(menuopcoes);
+                    OpcoesMax = highlight + 1;
+                    OpcoesMin = OpcoesMax - 30;
 
-    switch(opcao) {
+                }
+                break;
 
-        case KEY_DOWN:
+            case KEY_UP:
+                if (highlight > 0) {
+                    highlight--;
+                    if (highlight < OpcoesMin) {
+
+                        OpcoesMin = highlight;
+                        OpcoesMax = OpcoesMin + 30;
+
+                    }
+                }
+                break;
+        }
     }
 }
 
