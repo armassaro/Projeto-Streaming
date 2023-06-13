@@ -12,8 +12,8 @@ typedef struct {
 
     int id;
 
-    char Nome[31];
-    char Genero[13];
+    char Nome[60];
+    char Genero[31];
     int Classificacao;
     char Plataforma[13];
     int QuantidadeTemporadas;
@@ -54,6 +54,8 @@ WINDOW *menuopcoes;
 int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
 
 int yborda, xborda;  //variáveis que guardam as dimensões da janela onde é desenhada a borda
+
+unsigned int OpcoesMin, OpcoesMax;
 
 // a logo foi separada por strings e sem struct por conta de problemas na programação
 char *stringlogopt1 = "  __                                                             \n";
