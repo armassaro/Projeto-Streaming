@@ -7,6 +7,7 @@ int main() {
     cbreak();
     curs_set(FALSE);
     delwin(menuopcoes);
+    int IntAux;
 
     serie = (Serie*) malloc(sizeof(Serie) * 259);  //aloca memória pro vetor struct de séries
 
@@ -38,7 +39,7 @@ int main() {
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
             fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
-
+            IntAux = 
         }
 
     }
