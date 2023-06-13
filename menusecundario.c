@@ -43,7 +43,7 @@ int main() {
 
     }
 
-    menuopcoes = newwin(8, 23, yterminal / 2 + 1, xterminal / 2 - 9);
+    menuopcoes = newwin(9, 23, yterminal / 2 + 1, xterminal / 2 - 9);
 
     keypad(menuopcoes, TRUE);  //habilita entrada de setas
     werase(menuopcoes);
@@ -57,8 +57,8 @@ int main() {
 
 void MenuSecundario(WINDOW *EntradaInfo) {
 
-    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar", "Listar por Genero",  "Sair"};
-    int opcoes = 6;
+    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar Series", "Listar por Genero", "Pesquisar", "Sair"};
+    int opcoes = 7;
     int opcao;
     int highlight = 0;
 
@@ -137,10 +137,14 @@ void MenuSecundario(WINDOW *EntradaInfo) {
                 break;
 
                 case 4:
-                // ListarPorGenero(EntradaInfo);
+                ListarPorGenero(EntradaInfo);
                 break;
 
                 case 5:
+                PesquisarSerie(EntradaInfo);
+                break;
+
+                case 6:
                 endwin();
                 exit(0);
                 break;
@@ -211,7 +215,7 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o genero da serie a ser cadastrada")) / 2, "Digite o genero da serie a ser cadastrada");
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-    getnstr(serie[QuantidadeSeries - 1].Genero, 12);
+    getnstr(serie[QuantidadeSeries - 1].Genero, 31);
     refresh();
     setbuf(stdin, NULL);
 
@@ -679,12 +683,13 @@ void RemoverSerie(WINDOW *EntradaInfo) {
 }
 
 void ListaSerie() {
+    
     keypad(borda, TRUE);
     cbreak();
     curs_set(FALSE);
 
-    unsigned int OpcoesMin = 0;
-    unsigned int OpcoesMax = 30;
+    OpcoesMin = 0;
+    OpcoesMax = 30;
     int highlight = 0;
     int opcao;
     int yopcao = 0;
@@ -705,21 +710,22 @@ void ListaSerie() {
         }
 
         wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "ID: %i", serie[highlight].id);
-        mvwprintw(borda, yborda / 2 - 3, xborda / 2 + 5, "Genero: %s", serie[highlight].Genero);
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Classificacao: %i", serie[highlight].id);
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Plataforma: %i", serie[highlight].Plataforma);
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Quantidade de temporadas: %i", serie[highlight].QuantidadeTemporadas);
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Quantidade de episodios por temporada:");
-        
+        mvwprintw(borda, (yborda - 8) / 2, xborda / 2 + 10, "ID: %i", serie[highlight].id);
+        mvwprintw(borda, (yborda - 8) / 2 + 2, xborda / 2 + 10, "Genero: %s", serie[highlight].Genero);
+        mvwprintw(borda, (yborda - 8) / 2 + 3, xborda / 2 + 10, "Classificacao: %i", serie[highlight].id);
+        mvwprintw(borda, (yborda - 8) / 2 + 4, xborda / 2 + 10, "Plataforma: %s", serie[highlight].Plataforma);
+        mvwprintw(borda, (yborda - 8) / 2 + 5, xborda / 2 + 10, "Quantidade de temporadas: %i", serie[highlight].QuantidadeTemporadas);
+        mvwprintw(borda, (yborda - 8) / 2 + 6, xborda / 2 + 10, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
+        mvwprintw(borda, (yborda - 8) / 2 + 7, xborda / 2 + 10, "Quantidade de episodios por temporada: ");
+
         for(int a = 0; a < serie[highlight].QuantidadeTemporadas; a++) {
 
-            printw(borda, "%i ", serie[highlight].QuantidadeEpisodiosPorTemporada[a]);
+            wprintw(borda, "%i ", serie[highlight].QuantidadeEpisodiosPorTemporada[a]);
 
         }
 
-        mvwprintw(borda, yborda / 2 - 5, xborda / 2 + 5, "Duracao media dos episodios: %i", serie[highlight].DuracaoMediaEpisodios);
+        mvwprintw(borda, (yborda - 8) / 2 + 8, xborda / 2 + 10, "Duracao media dos episodios: %i", serie[highlight].DuracaoMediaEpisodios);
+        mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
         wrefresh(borda);
 
         opcao = wgetch(menuopcoes);
@@ -745,119 +751,257 @@ void ListaSerie() {
 
                     }
                 }
-                break;
+            break;
+
+            case 's':
+                return;
         }
     }
 }
 
-// void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
+void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
 
-//     wclear(menuopcoes);
-//     wrefresh(menuopcoes);
-//     char StringAux[12];
-//     keypad(menuopcoes, TRUE);
-//     int opcoesMax;
-//     int opcoesMin = 0;
-//     int opcao;
-//     int highlight = 0;
+    nocbreak();
+    echo();
+    curs_set(TRUE);
 
-//     clear();
-//     refresh();
-//     wclear(borda);
-//     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
-//     wrefresh(borda);
-//     wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
-//     wrefresh(EntradaInfo);
-//     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o gênero que queira lista as séries")) / 2, "Digite o gênero que queira listar as séries");
-//     wrefresh(borda);
-//     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
-//     refresh();
-//     getnstr(StringAux, 12);
-//     setbuf(stdin, NULL);
+    int yopcao = 0;
+    int highlight = 0;
+    int opcao;
+    int Contador = 0;
+    int IntAux;
+    OpcoesMin = 0;
+    OpcoesMax = 30;
 
-//     for(int a = 0; a < QuantidadeSeries; a++) {
+    char *StringAux = (char*) malloc(sizeof(char) * 60);
 
+    int *IndicesSeries = (int*) malloc(sizeof(int));
 
-//     }
+    clear();
+    refresh();
+    wclear(borda);
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(borda);
+    wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(EntradaInfo);
+    mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite um genero para listar series")) / 2, "Digite um genero para listar series");
+    wrefresh(borda);
+    move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
+    refresh();
+    getnstr(StringAux, 60);
+    setbuf(stdin, NULL);
 
-//     for(int a = opcoesMin; a < opcoesMax; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
+    for(int a = 0; a < QuantidadeSeries; a++) {
 
-//         if(a == highlight) {
+        if(strcasecmp(StringAux, serie[a].Genero) == 0) {
 
-//             wattron(menuopcoes, A_REVERSE);
-
-//         }
-
-//         int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
-//         mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
-//         wattroff(menuopcoes, A_REVERSE);
-
-//     }
-
-//     wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-//     wrefresh(menuopcoes);
-
-//     opcao = wgetch(menuopcoes);
-
-//     switch(opcao) {
-
-//         case KEY_UP:
-//         highlight--;
-//            if(highlight < 0) {
-
-//                 highlight = 0;
-
-//             }
-//             break;
-
-//             case KEY_DOWN:
-//             highlight++;
-//             if(highlight > opcoes) {  // if que garante que o usuário não selecione opções fora do menu
-
-//                 highlight = opcoes - 1;
-
-//             }
-//             break;
-
-//             case '\n':  //case que representa o que cada opção faz
-//             switch(highlight) {
-
-//                 case 0:
-//                 CadastrarSerie(EntradaInfo);
-//                 break;
-
-//                 case 1:
-//                 //AlterarSerie(EntradaInfo);
-//                 break;
-
-//                 case 2:
-//                 //RemoverSerie(EntradaInfo);
-//                 break;
-
-//                 case 3:
-//                 //ListaSerie(EntradaInfo);
-//                 break;
-
-//                 case 4:
-//                 ListarPorGenero(EntradaInfo);
-//                 break;
-
-//                 case 5:
-//                 endwin();
-//                 exit(0);
-//                 break;
-
-//                 default:
-//                 break;
-
-//             }
-//             break;
-
-//             default:
-//             break;
+            IndicesSeries[Contador] = a;
+            Contador++;
+            IndicesSeries = (int*) realloc(IndicesSeries, sizeof(int) * (Contador + 1));
             
-//         }
+        }
 
-//     }
+    }
 
-// }
+    IndicesSeries = (int*) realloc(IndicesSeries, sizeof(int) * (Contador - 1));
+
+    clear();
+    refresh();
+    keypad(borda, TRUE);
+    curs_set(FALSE);
+    noecho();
+    cbreak();
+
+    while (1) {
+
+        wclear(borda);
+        yopcao = 0;
+
+        for (int a = OpcoesMin; a < OpcoesMax; a++) {
+
+            if (a == highlight) {
+                wattron(borda, A_REVERSE);
+            }
+
+            IntAux = IndicesSeries[a];
+            int x = (40 - strlen(serie[IntAux].Nome)) / 2;
+            mvwprintw(borda, yopcao + 1, x, "%s", serie[IntAux].Nome);
+            wattroff(borda, A_REVERSE);
+            yopcao++;
+
+        }
+
+        IntAux = IndicesSeries[highlight];
+        wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+        mvwprintw(borda, (yborda - 8) / 2, xborda / 2 + 6, "ID: %i", serie[IntAux].id);
+        mvwprintw(borda, (yborda - 8) / 2 + 2, xborda / 2 + 6, "Genero: %s", serie[IntAux].Genero);
+        mvwprintw(borda, (yborda - 8) / 2 + 3, xborda / 2 + 6, "Classificacao: %i", serie[IntAux].id);
+        mvwprintw(borda, (yborda - 8) / 2 + 4, xborda / 2 + 6, "Plataforma: %s", serie[IntAux].Plataforma);
+        mvwprintw(borda, (yborda - 8) / 2 + 5, xborda / 2 + 6, "Quantidade de temporadas: %i", serie[IntAux].QuantidadeTemporadas);
+        mvwprintw(borda, (yborda - 8) / 2 + 6, xborda / 2 + 6, "Quantidade total de episodios: %i", serie[IntAux].QuantidadeEpisodiosTotais);
+        mvwprintw(borda, (yborda - 8) / 2 + 7, xborda / 2 + 6, "Quantidade de episodios por temporada: ");
+
+        for(int a = 0; a < serie[IntAux].QuantidadeTemporadas; a++) {
+
+            wprintw(borda, "%i ", serie[IntAux].QuantidadeEpisodiosPorTemporada[a]);
+
+        }
+
+        mvwprintw(borda, (yborda - 8) / 2 + 8, xborda / 2 + 6, "Duracao media dos episodios: %i", serie[IntAux].DuracaoMediaEpisodios);
+        mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
+        wrefresh(borda);
+
+        opcao = wgetch(menuopcoes);
+
+        switch (opcao) {
+            case KEY_DOWN:
+                highlight++;
+                if (highlight >= OpcoesMax) {
+
+                    highlight = Contador - 1;
+                    OpcoesMax = highlight + 1;
+                    OpcoesMin = OpcoesMax - 30;
+
+                }
+                break;
+
+            case KEY_UP:
+                if (highlight > 0) {
+                    highlight--;
+                    if (highlight < OpcoesMin) {
+
+                        OpcoesMin = highlight;
+                        OpcoesMax = OpcoesMin + 30;
+
+                    }
+                }
+            break;
+
+            case 's':
+                return;
+
+
+        
+        }
+        
+        // mvwprintw(borda, (yborda - 8) / 2, xborda / 2 + 10, "ID: %i", serie[highlight].id);
+        // mvwprintw(borda, (yborda - 8) / 2 + 2, xborda / 2 + 10, "Genero: %s", serie[highlight].Genero);
+        // mvwprintw(borda, (yborda - 8) / 2 + 3, xborda / 2 + 10, "Classificacao: %i", serie[highlight].id);
+        // mvwprintw(borda, (yborda - 8) / 2 + 4, xborda / 2 + 10, "Plataforma: %s", serie[highlight].Plataforma);
+        // mvwprintw(borda, (yborda - 8) / 2 + 5, xborda / 2 + 10, "Quantidade de temporadas: %i", serie[highlight].QuantidadeTemporadas);
+        // mvwprintw(borda, (yborda - 8) / 2 + 6, xborda / 2 + 10, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
+        // mvwprintw(borda, (yborda - 8) / 2 + 7, xborda / 2 + 10, "Quantidade de episodios por temporada: ");
+    }
+}
+
+void PesquisarSerie(WINDOW *EntradaInfo) {
+
+    nocbreak();
+    echo();
+    curs_set(TRUE);
+
+    char StringAux[100];
+    bool SerieEncontrada = FALSE;
+    int IndiceSerieEscolhida;
+    int IntAux;
+
+    ColetaNomePesquisarSerie:
+    clear();
+    refresh();
+    wclear(borda);
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(borda);
+    wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(EntradaInfo);
+    mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o nome da serie que deseja pesquisar")) / 2, "Digite o nome da serie que deseja pesquisar");
+    wrefresh(borda);
+    move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
+    refresh();
+    getnstr(StringAux, 31);
+    setbuf(stdin, NULL);
+
+    for(int a = 0; a < QuantidadeSeries; a++) {
+
+        if(strcasecmp(serie[a].Nome, StringAux) == 0) {
+
+            SerieEncontrada = TRUE;
+            IndiceSerieEscolhida = a;
+            break;
+
+        }
+
+    }
+
+    if(SerieEncontrada == FALSE) {
+
+        clear();
+        refresh();
+        wclear(borda);
+        wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+        wrefresh(borda);
+        mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Serie nao encontrada. Pressione qualquer tecla e digite novamente")) / 2, "Serie nao encontrada. Pressione qualquer tecla e digite novamente");
+        wrefresh(borda);
+        getch();
+        goto ColetaNomePesquisarSerie;
+        
+    }
+
+    curs_set(FALSE);
+    wclear(EntradaInfo);
+    wclear(borda);
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+    
+    strcpy(StringAux, "Nome: ");
+    strcat(StringAux, serie[IndiceSerieEscolhida].Nome);
+    mvwprintw(borda, (yborda - 8) / 2 - 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+    sprintf(StringAux, "ID: %i", serie[IndiceSerieEscolhida].id);
+    mvwprintw(borda, (yborda - 8) / 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+    strcpy(StringAux, "Genero: ");
+    strcat(StringAux, serie[IndiceSerieEscolhida].Genero);
+    mvwprintw(borda, (yborda - 8) / 2 + 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Classficacao: %i", serie[IndiceSerieEscolhida].Classificacao);
+    mvwprintw(borda, (yborda - 8) / 2 + 3, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    strcpy(StringAux, "Plataforma: ");
+    strcat(StringAux, serie[IndiceSerieEscolhida].Plataforma);
+    mvwprintw(borda, (yborda - 8) / 2 + 4, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Quantidade de temporadas: %i", serie[IndiceSerieEscolhida].QuantidadeTemporadas);
+    mvwprintw(borda, (yborda - 8) / 2 + 5, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Quantidade total de episodios: %i", serie[IndiceSerieEscolhida].QuantidadeEpisodiosTotais);
+    mvwprintw(borda, (yborda - 8) / 2 + 6, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    char *StringAux1 = (char*) malloc(sizeof(char) * 100);
+
+    strcpy(StringAux, " ");
+
+    for(int a = 0; a < serie[IndiceSerieEscolhida].QuantidadeTemporadas; a++) {
+
+        sprintf(StringAux1, "%i ", serie[IndiceSerieEscolhida].QuantidadeEpisodiosPorTemporada[a]);
+        strcat(StringAux, StringAux1);
+
+    }
+    
+    strcpy(StringAux1, StringAux);
+    strcpy(StringAux, "Quantidade de episodios por temporada:");
+    strcat(StringAux, StringAux1);
+    mvwprintw(borda, (yborda - 8) / 2 + 7, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    free(StringAux1);
+
+    sprintf(StringAux, "Duracao media dos episodios: %i", serie[IndiceSerieEscolhida].DuracaoMediaEpisodios);
+    mvwprintw(borda, (yborda - 8) / 2 + 8, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione qualquer tecla para sair")) / 2, "Pressione qualquer tecla para sair");
+    
+    wrefresh(borda);
+    
+    getch();
+
+    return;
+
+}
