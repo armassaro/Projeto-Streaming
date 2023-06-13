@@ -36,7 +36,7 @@ int main() {
         fscanf(arquivotexto, "%d,", &serie[i].QuantidadeTemporadas);
 
         int realoca = serie[i].QuantidadeTemporadas;
-        serie[i].QuantidadeEpisodiosPorTemporada = malloc(realoca * sizeof(int));
+        serie[i].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
 
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
@@ -138,7 +138,6 @@ void MenuSecundario(WINDOW *EntradaInfo) {
                 break;
 
                 case 3:
-                wclear(menuopcoes);
                 ListaSerie();
                 break;
 
@@ -166,6 +165,8 @@ void MenuSecundario(WINDOW *EntradaInfo) {
             
         }
 
+        curs_set(TRUE);
+
     }
 
 }
@@ -177,7 +178,7 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     cbreak();
     echo();
     QuantidadeSeries++;
-    char *StringAux = (char*) malloc(4 * sizeof(char)); //string auxiliar para coleta de inteiro
+    char *StringAux = (char*) malloc (4 * sizeof(char)); //string auxiliar para coleta de inteiro
     serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));  //realoca para novo tamanho
     serie[QuantidadeSeries - 1].id = QuantidadeSeries;  //atribuição de id para a nova série a ser colocada
 
@@ -330,8 +331,8 @@ void AlterarSerie(WINDOW *EntradaInfo) {
     nocbreak();
     curs_set(TRUE);
     char *StringAux = (char*) malloc(100 * sizeof(char));
+    char *StringAux1 = (char*) malloc(100 * sizeof(char));
     bool SerieEncontrada = FALSE;
-    int IndiceSerieEscolhida;
     typedef enum {Nome = 1, Genero, Classificacao, Plataforma, QuantidadeTemporadas, QuantidadeEpisodiosTotais, QuantidadeEpisodiosPorTemporada, DuracaoMediaEpisodios, Sair} StructInfo;
     int Escolha;
 
@@ -560,21 +561,51 @@ void AlterarSerie(WINDOW *EntradaInfo) {
         wclear(borda);
         wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
         wrefresh(borda);
-        mvwprintw(borda, (yborda - 9) / 2, (xborda - strlen("NOVAS INFORMAÇOES:")) / 2, "NOVAS INFORMACOES:");
-        mvwprintw(borda, (yborda - 9) / 2 + 2, xborda / 2 - 10, "Nome: %s", serie[IndiceSerieEscolhida].Nome);
-        mvwprintw(borda, (yborda - 9) / 2 + 3, xborda / 2 - 10, "Genero: %s", serie[IndiceSerieEscolhida].Genero);
-        mvwprintw(borda, (yborda - 9) / 2 + 4, xborda / 2 - 10, "Classificacao: %i", serie[IndiceSerieEscolhida].Classificacao);
-        mvwprintw(borda, (yborda - 9) / 2 + 5, xborda / 2 - 10, "Plataforma: %s", serie[IndiceSerieEscolhida].Plataforma);
-        mvwprintw(borda, (yborda - 9) / 2 + 6, xborda / 2 - 10, "Quantidade de temporadas: %i", serie[IndiceSerieEscolhida].QuantidadeTemporadas);
-        mvwprintw(borda, (yborda - 9) / 2 + 7, xborda / 2 - 10, "Quantidade total de episodios: %i", serie[IndiceSerieEscolhida].QuantidadeEpisodiosTotais);
-        mvwprintw(borda, (yborda - 9) / 2 + 8, xborda / 2 - 10, "Quantidade de episodios por temporada:");
-        for(int a = 0; a < serie[IndiceSerieEscolhida].QuantidadeTemporadas; a++) {
+        strcpy(StringAux, "Nome: ");
+    strcat(StringAux, serie[IndiceSerieEscolhida].Nome);
+    mvwprintw(borda, (yborda - 8) / 2 - 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
 
-            wprintw(borda, "%i ", serie[IndiceSerieEscolhida].QuantidadeEpisodiosPorTemporada[a]);
+    sprintf(StringAux, "ID: %i", serie[IndiceSerieEscolhida].id);
+    mvwprintw(borda, (yborda - 8) / 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
 
-        }
-        mvwprintw(borda, (yborda - 9) / 2 + 9, xborda / 2 - 10, "Duracao media dos episodios: %i", serie[IndiceSerieEscolhida].DuracaoMediaEpisodios);
-        wrefresh(borda);
+    strcpy(StringAux, "Genero: ");
+    strcat(StringAux, serie[IndiceSerieEscolhida].Genero);
+    mvwprintw(borda, (yborda - 8) / 2 + 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Classficacao: %i", serie[IndiceSerieEscolhida].Classificacao);
+    mvwprintw(borda, (yborda - 8) / 2 + 3, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    strcpy(StringAux, "Plataforma: ");
+    strcat(StringAux, serie[IndiceSerieEscolhida].Plataforma);
+    mvwprintw(borda, (yborda - 8) / 2 + 4, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Quantidade de temporadas: %i", serie[IndiceSerieEscolhida].QuantidadeTemporadas);
+    mvwprintw(borda, (yborda - 8) / 2 + 5, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Quantidade total de episodios: %i", serie[IndiceSerieEscolhida].QuantidadeEpisodiosTotais);
+    mvwprintw(borda, (yborda - 8) / 2 + 6, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    char *StringAux1 = (char*) malloc(sizeof(char) * 100);
+
+    strcpy(StringAux, " ");
+
+    for(int a = 0; a < serie[IndiceSerieEscolhida].QuantidadeTemporadas; a++) {
+
+        sprintf(StringAux1, "%i ", serie[IndiceSerieEscolhida].QuantidadeEpisodiosPorTemporada[a]);
+        strcat(StringAux, StringAux1);
+
+    }
+    
+    strcpy(StringAux1, StringAux);
+    strcpy(StringAux, "Quantidade de episodios por temporada:");
+    strcat(StringAux, StringAux1);
+    mvwprintw(borda, (yborda - 8) / 2 + 7, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+    sprintf(StringAux, "Duracao media dos episodios: %i", serie[IndiceSerieEscolhida].DuracaoMediaEpisodios);
+    mvwprintw(borda, (yborda - 8) / 2 + 8, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione qualquer tecla para sair")) / 2, "Pressione qualquer tecla para sair");
+    wrefresh(borda);
+    curs_set(FALSE);
         getch();
         break;
 
@@ -593,6 +624,7 @@ void AlterarSerie(WINDOW *EntradaInfo) {
     }
 
     free(StringAux);
+    free(StringAux1);
     return;
 
 }
@@ -604,7 +636,6 @@ void RemoverSerie(WINDOW *EntradaInfo) {
     curs_set(TRUE);
 
     char *StringAux = (char*) malloc(50 * sizeof(char));
-    int IndiceSerieEscolhida;
     bool SerieEncontrada = FALSE;
 
     ColetaNomeRemoverSerie:
@@ -682,6 +713,7 @@ void RemoverSerie(WINDOW *EntradaInfo) {
     mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("A serie inserida foi removida com sucesso! Pressione qualquer tecla")) / 2, "A serie inserida foi removida com sucesso! Pressione qualquer tecla");
     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
     wrefresh(borda);
+    curs_set(FALSE);
     getch();
 
     return;
@@ -689,9 +721,10 @@ void RemoverSerie(WINDOW *EntradaInfo) {
 }
 
 void ListaSerie() {
-    
+
     keypad(borda, TRUE);
     cbreak();
+    noecho();
     curs_set(FALSE);
 
     OpcoesMin = 0;
@@ -700,39 +733,74 @@ void ListaSerie() {
     int opcao;
     int yopcao = 0;
 
+    char *StringAux = (char*) malloc(sizeof(char) * 100);
+
     while (1) {
+        
         wclear(borda);
         yopcao = 0;
 
         for (int a = OpcoesMin; a < OpcoesMax; a++) {
             if (a == highlight) {
+
                 wattron(borda, A_REVERSE);
+
             }
 
-            int x = (23 - strlen(serie[a].Nome)) / 2;
+            int x = (40 - strlen(serie[a].Nome)) / 2;
             mvwprintw(borda, yopcao + 1, x, "%s", serie[a].Nome);
             wattroff(borda, A_REVERSE);
             yopcao++;
-        }
-
-        wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
-        mvwprintw(borda, (yborda - 8) / 2, xborda / 2 + 10, "ID: %i", serie[highlight].id);
-        mvwprintw(borda, (yborda - 8) / 2 + 2, xborda / 2 + 10, "Genero: %s", serie[highlight].Genero);
-        mvwprintw(borda, (yborda - 8) / 2 + 3, xborda / 2 + 10, "Classificacao: %i", serie[highlight].id);
-        mvwprintw(borda, (yborda - 8) / 2 + 4, xborda / 2 + 10, "Plataforma: %s", serie[highlight].Plataforma);
-        mvwprintw(borda, (yborda - 8) / 2 + 5, xborda / 2 + 10, "Quantidade de temporadas: %i", serie[highlight].QuantidadeTemporadas);
-        mvwprintw(borda, (yborda - 8) / 2 + 6, xborda / 2 + 10, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
-        mvwprintw(borda, (yborda - 8) / 2 + 7, xborda / 2 + 10, "Quantidade de episodios por temporada: ");
-
-        for(int a = 0; a < serie[highlight].QuantidadeTemporadas; a++) {
-
-            wprintw(borda, "%i ", serie[highlight].QuantidadeEpisodiosPorTemporada[a]);
 
         }
 
-        mvwprintw(borda, (yborda - 8) / 2 + 8, xborda / 2 + 10, "Duracao media dos episodios: %i", serie[highlight].DuracaoMediaEpisodios);
-        mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
-        wrefresh(borda);
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+    
+    strcpy(StringAux, "Nome: ");
+    strcat(StringAux, serie[highlight].Nome);
+    mvwprintw(borda, (yborda - 8) / 2 - 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+    sprintf(StringAux, "ID: %i", serie[highlight].id);
+    mvwprintw(borda, (yborda - 8) / 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+    strcpy(StringAux, "Genero: ");
+    strcat(StringAux, serie[highlight].Genero);
+    mvwprintw(borda, (yborda - 8) / 2 + 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Classficacao: %i", serie[highlight].Classificacao);
+    mvwprintw(borda, (yborda - 8) / 2 + 3, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    strcpy(StringAux, "Plataforma: ");
+    strcat(StringAux, serie[highlight].Plataforma);
+    mvwprintw(borda, (yborda - 8) / 2 + 4, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Quantidade de temporadas: %i", serie[highlight].QuantidadeTemporadas);
+    mvwprintw(borda, (yborda - 8) / 2 + 5, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    sprintf(StringAux, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
+    mvwprintw(borda, (yborda - 8) / 2 + 6, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+    char *StringAux1 = (char*) malloc(sizeof(char) * 100);
+
+    strcpy(StringAux, " ");
+    for(int a = 0; a < serie[highlight].QuantidadeTemporadas; a++) {
+
+        sprintf(StringAux1, "%i ", serie[highlight].QuantidadeEpisodiosPorTemporada[a]);
+        strcat(StringAux, StringAux1);
+
+    }
+    
+    strcpy(StringAux1, StringAux);
+    strcpy(StringAux, "Quantidade de episodios por temporada:");
+    strcat(StringAux, StringAux1);
+    mvwprintw(borda, (yborda - 8) / 2 + 7, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+    sprintf(StringAux, "Duracao media dos episodios: %i", serie[highlight].DuracaoMediaEpisodios);
+    mvwprintw(borda, (yborda - 8) / 2 + 8, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
+    wrefresh(borda);
+
+    free(StringAux1);
 
         opcao = wgetch(menuopcoes);
 
@@ -748,8 +816,9 @@ void ListaSerie() {
                 break;
 
             case KEY_UP:
-                if (highlight > 0) {
-                    highlight--;
+                highlight--;
+                if (highlight < 0) {
+                    highlight = 0;
                     if (highlight < OpcoesMin) {
 
                         OpcoesMin = highlight;
@@ -760,7 +829,8 @@ void ListaSerie() {
             break;
 
             case 's':
-                return;
+            free(StringAux);
+            return;
         }
     }
 }
@@ -906,10 +976,9 @@ void PesquisarSerie(WINDOW *EntradaInfo) {
     echo();
     curs_set(TRUE);
 
-    char StringAux[100];
+    char *StringAux = (char*) malloc(sizeof(char) * 100);
     bool SerieEncontrada = FALSE;
-    int IndiceSerieEscolhida;
-    int IntAux;
+
 
     ColetaNomePesquisarSerie:
     clear();
@@ -1007,6 +1076,8 @@ void PesquisarSerie(WINDOW *EntradaInfo) {
     wrefresh(borda);
     
     getch();
+
+    free(StringAux);
 
     return;
 
