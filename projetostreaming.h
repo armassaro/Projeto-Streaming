@@ -47,6 +47,10 @@ FILE *arquivobinHistorico;
 char *recebeChar;
 int recebeInt;
 
+char *StringAux;
+int IntAux;
+int IndiceSerieEscolhida;
+
 WINDOW *borda;
 
 WINDOW *menuopcoes;
