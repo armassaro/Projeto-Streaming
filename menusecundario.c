@@ -6,7 +6,7 @@ int main() {
     noecho();
     cbreak();
     curs_set(FALSE);
-    delwin(menuopcoes);
+    delwin(MenuOpcoes);
 
     serie = (Serie*) malloc(sizeof(Serie) * 259);  //aloca memória pro vetor struct de séries
 
@@ -47,10 +47,10 @@ int main() {
 
     }//for
 
-    menuopcoes = newwin(9, 23, yterminal / 2 + 1, xterminal / 2 - 9);
+    MenuOpcoes = newwin(9, 23, yterminal / 2 + 1, xterminal / 2 - 9);
 
-    keypad(menuopcoes, TRUE);  //habilita entrada de setas
-    werase(menuopcoes);
+    keypad(MenuOpcoes, TRUE);  //habilita entrada de setas
+    werase(MenuOpcoes);
 
     MenuSecundario(EntradaInfo);
 
@@ -85,20 +85,20 @@ void MenuSecundario(WINDOW *EntradaInfo) {
 
         if(a == highlight) {
 
-            wattron(menuopcoes, A_REVERSE);
+            wattron(MenuOpcoes, A_REVERSE);
 
         }
 
-        int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela menuopcoes
-        mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
-        wattroff(menuopcoes, A_REVERSE);
+        int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela MenuOpcoes
+        mvwprintw(MenuOpcoes, a + 1, x, "%s", menuescolhas[a]);
+        wattroff(MenuOpcoes, A_REVERSE);
 
     }
 
-    wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-    wrefresh(menuopcoes);
+    wborder(MenuOpcoes, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(MenuOpcoes);
 
-    opcao = wgetch(menuopcoes);
+    opcao = wgetch(MenuOpcoes);
 
     switch(opcao) {
 
@@ -800,7 +800,7 @@ void ListaSerie() {
 
     free(StringAux1);
 
-        opcao = wgetch(menuopcoes);
+        opcao = wgetch(MenuOpcoes);
 
         switch (opcao) {
             case KEY_DOWN:
@@ -925,7 +925,7 @@ void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
         mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
         wrefresh(borda);
 
-        opcao = wgetch(menuopcoes);
+        opcao = wgetch(MenuOpcoes);
 
         switch (opcao) {
             case KEY_DOWN:
