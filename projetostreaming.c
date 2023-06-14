@@ -124,60 +124,60 @@ int main() {
 
     wrefresh(borda);
 
-    menuopcoes = newwin(10, 15, yterminal / 2 + 1, xterminal / 2 - 5);  //cria uma janela para abrigar as opções do menu inicial
+    MenuOpcoes = newwin(10, 15, yterminal / 2 + 1, xterminal / 2 - 5);  //cria uma janela para abrigar as opções do menu inicial
     refresh();
 
-    char *menuescolhas[] = {"Iniciar", "Sair"};
-    int opcoes = 2;
-    int opcao;  //variável que representa a opção escolhida
-    int highlight = 0;
+    char *MenuEscolhas[] = {"Iniciar", "Sair"};
+    int Opcoes = 2;
+    int Opcao;  //variável que representa a opção escolhida
+    int Highlight = 0;
 
-    keypad(menuopcoes, TRUE);  //habilita coleta de setas do teclado
-    werase(menuopcoes);
+    keypad(MenuOpcoes, TRUE);  //habilita coleta de setas do teclado
+    werase(MenuOpcoes);
 
     while(1) {  //loop de seleção das opções dentro do menu
 
-        for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
+        for(int a = 0; a < Opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
 
-            if(a == highlight) {
+            if(a == Highlight) {
 
-                wattron(menuopcoes, A_REVERSE);
+                wattron(MenuOpcoes, A_REVERSE);
 
             }
 
-            int x = (15 - strlen(menuescolhas[a])) / 2;
-            mvwprintw(menuopcoes, a + 1, x, "%s", menuescolhas[a]);
-            wattroff(menuopcoes, A_REVERSE);
+            int x = (15 - strlen(MenuEscolhas[a])) / 2;
+            mvwprintw(MenuOpcoes, a + 1, x, "%s", MenuEscolhas[a]);
+            wattroff(MenuOpcoes, A_REVERSE);
 
         }
 
-        wborder(menuopcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-        wrefresh(menuopcoes);
+        wborder(MenuOpcoes, '#', '#', '-', '-', '-', '-', '-', '-');
+        wrefresh(MenuOpcoes);
 
-        opcao = wgetch(menuopcoes);  //coleta a entrada do usuário dentro da janela menuopcoes
+        Opcao = wgetch(MenuOpcoes);  //coleta a entrada do usuário dentro da janela MenuOpcoes
 
-        switch(opcao) {
+        switch(Opcao) {
 
             case KEY_UP:
-            highlight--;
-            if(highlight < 0) {
+            Highlight--;
+            if(Highlight < 0) {
 
-                highlight = 0;
+                Highlight = 0;
 
             }
             break;
 
             case KEY_DOWN:
-            highlight++;
-            if(highlight >= opcoes) {  // if que garante que o usuário não selecione opções fora do menu
+            Highlight++;
+            if(Highlight >= Opcoes) {  // if que garante que o usuário não selecione opções fora do menu
 
-                highlight = opcoes - 1;
+                Highlight = Opcoes - 1;
 
             }
             break;
 
             case '\n':  //case que representa o que cada opção faz
-            if (highlight == 0) {
+            if (Highlight == 0) {
                 
                 clear();
                 refresh();
@@ -196,7 +196,7 @@ int main() {
                 return 0;
 
             }
-            if(highlight == 1) {  //se o usuário optar pela opção "não", sai do programa
+            if(Highlight == 1) {  //se o usuário optar pela opção "não", sai do programa
 
                 endwin();
                 return 0;
@@ -235,7 +235,7 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem1)) / 2; //variável utilizada no cálculo da centralização da mensagem
 
-    for(int a = 0; a <= strlen(mensagem1) - 1; a++) {  //printa na tela a mensagem 1
+    for(unsigned int a = 0; a <= strlen(mensagem1) - 1; a++) {  //printa na tela a mensagem 1
 
         mvwaddch(borda, yborda / 2 - 5, a + x, mensagem1[a]);
         wmove(borda, yborda / 2 - 5, a + x + 1);
@@ -246,7 +246,7 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem2)) / 2;
 
-    for(int a = 0; a <= strlen(mensagem2) - 1; a++) {  //printa na tela a mensagem 2
+    for(unsigned int a = 0; a <= strlen(mensagem2) - 1; a++) {  //printa na tela a mensagem 2
 
         mvwaddch(borda, yborda / 2 - 3, a + x, mensagem2[a]);
         wmove(borda, yborda / 2 - 3, a + x + 1);
@@ -257,7 +257,7 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem3)) / 2;
 
-    for(int a = 0; a <= strlen(mensagem3) - 1; a++) {  //printa na tela a mensagem 3
+    for(unsigned int a = 0; a <= strlen(mensagem3) - 1; a++) {  //printa na tela a mensagem 3
 
         mvwaddch(borda, yborda / 2 - 2, a + x, mensagem3[a]);
         wmove(borda, yborda / 2 - 2, a + x + 1);
@@ -268,7 +268,7 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem4)) / 2;
 
-    for(int a = 0; a <= strlen(mensagem4) - 1; a++) {  //printa na tela a mensagem 4
+    for(unsigned int a = 0; a <= strlen(mensagem4) - 1; a++) {  //printa na tela a mensagem 4
 
         mvwaddch(borda, yborda / 2 - 1, a + x, mensagem4[a]);
         wmove(borda, yborda / 2 - 1, a + x + 1);
@@ -279,7 +279,7 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem5)) / 2;
 
-    for(int a = 0; a <= strlen(mensagem5) - 1; a++) {  //printa na tela a mensagem 5
+    for(unsigned int a = 0; a <= strlen(mensagem5) - 1; a++) {  //printa na tela a mensagem 5
 
         mvwaddch(borda, yborda / 2 + 1, a + x, mensagem5[a]);
         wmove(borda, yborda / 2 + 1, a + x + 1);
@@ -292,17 +292,17 @@ void MensagemBoasVindas() {
 
     WINDOW *AlternativaSimNao = newwin(1, 153, (yborda / 2) + 7, 8);  //cria janela para abrigar as opções de sim ou não
 
-    int opcoes = 2;
-    int opcao;
-    int highlight = 0;
+    int Opcoes = 2;
+    int Opcao;
+    int Highlight = 0;
     keypad(AlternativaSimNao, TRUE);  //habilita as setas como entrada do teclado
     werase(AlternativaSimNao);
 
     while(1) {
 
-        for(int a = 0; a < opcoes; a++) {  //loop que imprime sim e nao
+        for(int a = 0; a < Opcoes; a++) {  //loop que imprime sim e nao
 
-            if(a == highlight) {
+            if(a == Highlight) {
 
                 wattron(AlternativaSimNao, A_REVERSE);
 
@@ -322,31 +322,31 @@ void MensagemBoasVindas() {
             }
         }
 
-        opcao = wgetch(AlternativaSimNao);  //entrada de caractere
+        Opcao = wgetch(AlternativaSimNao);  //entrada de caractere
 
-        switch(opcao) {  //switch que alterna o efeito de highlight da opção entre as opções disponíveis no menu
+        switch(Opcao) {  //switch que alterna o efeito de Highlight da opção entre as opções disponíveis no menu
 
             case KEY_RIGHT:
-            highlight++;
-            if(highlight > 1) {
+            Highlight++;
+            if(Highlight > 1) {
 
-                highlight = 1;
+                Highlight = 1;
 
             }
             break;
 
             case KEY_LEFT:
-            highlight--;
-            if(highlight < 0) {
+            Highlight--;
+            if(Highlight < 0) {
 
-                highlight = 0;
+                Highlight = 0;
 
             }
             break;
 
             case '\n': 
             
-            if (highlight == 0) {
+            if (Highlight == 0) {
                 
                 wclear(borda);
                 arquivobinSeries = fopen("arquivobinSeries.dat", "wb");
@@ -463,7 +463,7 @@ void MensagemBoasVindas() {
 
             }
 
-            if(highlight == 1) {  //caso selecionado não, sai do programa
+            if(Highlight == 1) {  //caso selecionado não, sai do programa
 
                 endwin();
                 exit(0);
