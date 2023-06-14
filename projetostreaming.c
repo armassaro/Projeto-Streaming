@@ -424,6 +424,33 @@ void MensagemBoasVindas() {
 
                 }
 
+                for (int i = 0; i < QuantidadeSeries; i++) {
+                    
+                    fwrite(&serie[i].id,sizeof(int),1,arquivobinSeries);
+           
+                    fwrite(serie[i].Nome,sizeof(char),101,arquivobinSeries);
+              
+                    fwrite(serie[i].Genero,sizeof(char),41,arquivobinSeries);
+               
+                    fwrite(&serie[i].Classificacao,sizeof(int),1,arquivobinSeries);
+           
+                    fwrite(serie[i].Plataforma,sizeof(char),41,arquivobinSeries);
+       
+                    fwrite(&serie[i].DuracaoMediaEpisodios,sizeof(int),1,arquivobinSeries);
+             
+                    fwrite(&serie[i].QuantidadeTemporadas,sizeof(int),1,arquivobinSeries);
+               
+
+                    for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
+                        
+                        fwrite(&serie[i].QuantidadeEpisodiosPorTemporada[j],sizeof(int),1,arquivobinSeries);
+                        
+                        }//for
+                        
+                }//for
+    
+                fclose(arquivobinSeries);
+
                 clear();
                 refresh();
                 x = (xborda - strlen("Os arquivos foram lidos e criados com sucesso, pressione qualquer tecla para prosseguir")) / 2;
