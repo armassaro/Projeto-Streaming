@@ -7,15 +7,14 @@ int main() {
     cbreak();
     curs_set(FALSE);
     delwin(menuopcoes);
-    int IntAux = 0;
 
     serie = (Serie*) malloc(sizeof(Serie) * 259);  //aloca memória pro vetor struct de séries
 
     getmaxyx(stdscr, yterminal, xterminal);  //consegue os valores máximos de resolução do terminal
     
     arquivotexto = fopen("streaming_db.txt", "r");
-    arquivobinSeries = fopen("arquivobinSeries.dat", "wb");
-    arquivobinHistorico = fopen("arquivobinHistorico.dat", "wb");
+    arquivobinSeries = fopen("arquivobinSeries.dat", "rb");
+    arquivobinHistorico = fopen("arquivobinHistorico.dat", "rb");
     
     borda = newwin(yterminal - 7, xterminal - 7, 4, 4);
     
@@ -23,31 +22,30 @@ int main() {
 
     WINDOW *EntradaInfo = newwin(3, xborda - 30, yterminal / 2, (xterminal - (xborda - 30)) / 2);
 
-    for (int i = 0; i < QuantidadeSeries; i++) {
+    for (int i = 0; i < QuantidadeSeries; i++) 
+    {
+        serie[i].QuantidadeEpisodiosTotais = 0;
 
-        IntAux = 0;
-        
-        fscanf(arquivotexto, "%d,", &serie[i].id);
-        fscanf(arquivotexto, "%[^,\n],", serie[i].Nome);
-        fscanf(arquivotexto, "%[^,\n],", serie[i].Genero);
-        fscanf(arquivotexto, "%d,", &serie[i].Classificacao);
-        fscanf(arquivotexto, "%[^,\n],", serie[i].Plataforma);
-        fscanf(arquivotexto, "%d,", &serie[i].DuracaoMediaEpisodios);
-        fscanf(arquivotexto, "%d,", &serie[i].QuantidadeTemporadas);
+        fread(&serie[i].id, sizeof(int), 1, arquivobinSeries);
+        fread(serie[i].Nome, sizeof(char), 101, arquivobinSeries);
+        fread(serie[i].Genero, sizeof(char), 41, arquivobinSeries);
+        fread(&serie[i].Classificacao, sizeof(int), 1, arquivobinSeries);
+        fread(serie[i].Plataforma, sizeof(char), 41, arquivobinSeries);
+        fread(&serie[i].DuracaoMediaEpisodios, sizeof(int), 1, arquivobinSeries);
+        fread(&serie[i].QuantidadeTemporadas, sizeof(int), 1, arquivobinSeries);
 
         int realoca = serie[i].QuantidadeTemporadas;
         serie[i].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
-
+        
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
-            fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
-            IntAux = IntAux + serie[i].QuantidadeEpisodiosPorTemporada[j];
+            fread(&serie[i].QuantidadeEpisodiosPorTemporada[j], sizeof(int), 1, arquivobinSeries);
+      
+            serie[i].QuantidadeEpisodiosTotais=serie[i].QuantidadeEpisodiosTotais+serie[i].QuantidadeEpisodiosPorTemporada[j];
+        
+        }//for
 
-        }
-
-        serie[i].QuantidadeEpisodiosTotais = IntAux;
-
-    }
+    }//for
 
     menuopcoes = newwin(9, 23, yterminal / 2 + 1, xterminal / 2 - 9);
 
