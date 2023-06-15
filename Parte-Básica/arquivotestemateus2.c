@@ -16,7 +16,7 @@ typedef struct {
     int DuracaoMediaEpisodios;
 
 } Serie;
-    
+
 
 
 typedef struct {
@@ -24,7 +24,7 @@ typedef struct {
     char Nome[101];
     int UltimaTemporadaAssistida;
     int UltimoEpisodio;
-    
+
 } Historico;
 
 int salvaHistorico (Serie *serie, int QuantidadeSeries,  Historico *historico, int indiceHistorico)
@@ -41,12 +41,12 @@ int salvaHistorico (Serie *serie, int QuantidadeSeries,  Historico *historico, i
 
     for (int i = 0; i < QuantidadeSeries; i++)
     {   
-       
-            
+
+
 
             if (strcasecmp(serieBusca,serie[i].Nome) == 0)
             {
-                
+
                 indiceHistorico ++;
                   printf("Aqui estao os dados bases da serie pesquisada\n\n"); 
                 contadorSerie++;
@@ -65,7 +65,7 @@ int salvaHistorico (Serie *serie, int QuantidadeSeries,  Historico *historico, i
                     printf("%d ", serie[i].QuantidadeEpisodiosPorTemporada[j]);
                 }
                 printf("\n \n \n");
-                
+
                 historico=(Historico*)realloc(historico,indiceHistorico * sizeof(Historico));
 
                 strcpy(historico[indiceHistorico].Nome,serie[i].Nome);
@@ -76,14 +76,14 @@ int salvaHistorico (Serie *serie, int QuantidadeSeries,  Historico *historico, i
 
                 printf("digite o ultimo Episodio assistido: ");
                 scanf("%d",&historico[indiceHistorico].UltimoEpisodio);
-            
-               
-                
+
+
+
                 printf("Os dados do historico da serie %s foi atualizado!! ",historico[indiceHistorico].Nome); 
                  break;
             }//if
-        
-        
+
+
     }//for
 
     if (contadorSerie == 0)
@@ -94,62 +94,59 @@ int salvaHistorico (Serie *serie, int QuantidadeSeries,  Historico *historico, i
 
 
 
-
-
-
         return indiceHistorico;
 
 
 
 }//int salvaHistorico
 
-void lerSeriesBinario (Serie *serie, int QuantidadeSeries, FILE *arquivo) {
+void lerSeriesBinario (Serie *serie, int QuantidadeSeries, FILE *arquivobinSeries) {
 
     for (int i = 0; i < QuantidadeSeries; i++) 
     {
         serie[i].QuantidadeEpisodiosTotais = 0;
 
-        fread(&serie[i].id, sizeof(int), 1, arquivo);
-        fread(serie[i].Nome, sizeof(char), 101, arquivo);
-        fread(serie[i].Genero, sizeof(char), 41, arquivo);
-        fread(&serie[i].Classificacao, sizeof(int), 1, arquivo);
-        fread(serie[i].Plataforma, sizeof(char), 41, arquivo);
-        fread(&serie[i].DuracaoMediaEpisodios, sizeof(int), 1, arquivo);
-        fread(&serie[i].QuantidadeTemporadas, sizeof(int), 1, arquivo);
+        fread(&serie[i].id, sizeof(int), 1, arquivobinSeries);
+        fread(serie[i].Nome, sizeof(char), 101, arquivobinSeries);
+        fread(serie[i].Genero, sizeof(char), 41, arquivobinSeries);
+        fread(&serie[i].Classificacao, sizeof(int), 1, arquivobinSeries);
+        fread(serie[i].Plataforma, sizeof(char), 41, arquivobinSeries);
+        fread(&serie[i].DuracaoMediaEpisodios, sizeof(int), 1, arquivobinSeries);
+        fread(&serie[i].QuantidadeTemporadas, sizeof(int), 1, arquivobinSeries);
 
         int realoca = serie[i].QuantidadeTemporadas;
         serie[i].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
-        
+
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
-            fread(&serie[i].QuantidadeEpisodiosPorTemporada[j], sizeof(int), 1, arquivo);
-      
+            fread(&serie[i].QuantidadeEpisodiosPorTemporada[j], sizeof(int), 1, arquivobinSeries);
+
             serie[i].QuantidadeEpisodiosTotais=serie[i].QuantidadeEpisodiosTotais+serie[i].QuantidadeEpisodiosPorTemporada[j];
         }//for
     }//for
 }//void lerseriesBinario
 
-void lerSeries(Serie *serie, int QuantidadeSeries, FILE *arquivo) {
+void lerSeries(Serie *serie, int QuantidadeSeries, FILE *arquivotexto) {
 
     for (int i = 0; i < QuantidadeSeries; i++) 
     {
         serie[i].QuantidadeEpisodiosTotais = 0;
 
-        fscanf(arquivo, "%d,", &serie[i].id);
-        fscanf(arquivo, "%[^,\n],", serie[i].Nome);
-        fscanf(arquivo, "%[^,\n],", serie[i].Genero);
-        fscanf(arquivo, "%d,", &serie[i].Classificacao);
-        fscanf(arquivo, "%[^,\n],", serie[i].Plataforma);
-        fscanf(arquivo, "%d,", &serie[i].DuracaoMediaEpisodios);
-        fscanf(arquivo, "%d,", &serie[i].QuantidadeTemporadas);
+        fscanf(arquivotexto, "%d,", &serie[i].id);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Nome);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Genero);
+        fscanf(arquivotexto, "%d,", &serie[i].Classificacao);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Plataforma);
+        fscanf(arquivotexto, "%d,", &serie[i].DuracaoMediaEpisodios);
+        fscanf(arquivotexto, "%d,", &serie[i].QuantidadeTemporadas);
 
         int realoca = serie[i].QuantidadeTemporadas;
         serie[i].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
-                                                                                        
+
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
-            fscanf(arquivo, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
-      
+            fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
+
             serie[i].QuantidadeEpisodiosTotais=serie[i].QuantidadeEpisodiosTotais+serie[i].QuantidadeEpisodiosPorTemporada[j];
         }//for
     }//for
@@ -167,7 +164,7 @@ void imprimirSeries(Serie *serie, int QuantidadeSeries)
         printf("Plataforma:%-15s ", serie[i].Plataforma);
         printf("Duracao media por ep:%-5d ", serie[i].DuracaoMediaEpisodios);
         printf("Quantidade de temporadas:%-5d ", serie[i].QuantidadeTemporadas);
-       
+
         printf("episodios por temporada: ");
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) 
         {
@@ -179,14 +176,14 @@ void imprimirSeries(Serie *serie, int QuantidadeSeries)
     }// for
 }//void imprimir series
 
-int cadastrar(int QuantidadeSeries , Serie *serie)
+int cadastrarSeries(int QuantidadeSeries , Serie *serie)
 {
     QuantidadeSeries++;
-  
+
     serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));
     serie[QuantidadeSeries - 1].id= QuantidadeSeries;
     setbuf(stdin,NULL);
- 
+
     printf("Digite o nome da serie\n:");
     fgets(serie[QuantidadeSeries - 1].Nome, 101, stdin);
     serie[QuantidadeSeries - 1].Nome[strcspn(serie[QuantidadeSeries-1].Nome, "\n")] = '\0';
@@ -194,18 +191,18 @@ int cadastrar(int QuantidadeSeries , Serie *serie)
 
     for (int i = 0; i < QuantidadeSeries - 1; i++)
     {
-      
+
         if (strcasecmp(serie[i].Nome, serie[QuantidadeSeries - 1].Nome) == 0)
         {
 
             printf("Essa serie ja esta cadastrada. Por favor, insira outro nome.\n");
             QuantidadeSeries--;  // Diminuir o tamanho para cancelar o cadastro da série repetida
-          
+
         }//if
     }//for
-    
-    
-    
+
+
+
     serie[QuantidadeSeries - 1].QuantidadeEpisodiosTotais= 0;
     printf("Digite o genero:\n");
     fgets(serie[QuantidadeSeries - 1].Genero, 41, stdin);
@@ -214,7 +211,7 @@ int cadastrar(int QuantidadeSeries , Serie *serie)
 
     printf("Digite a classificacao\n");
     scanf("%d", &serie[QuantidadeSeries - 1].Classificacao);
-    
+
     setbuf(stdin, NULL);
     printf("Digite plataforma\n");
     fgets(serie[QuantidadeSeries-1].Plataforma, 41, stdin);
@@ -223,13 +220,13 @@ int cadastrar(int QuantidadeSeries , Serie *serie)
 
     printf("Digite a duracao media:\n");
     scanf("%d", &serie[QuantidadeSeries - 1].DuracaoMediaEpisodios);
-    
+
     printf("Digite a quantia de temporadas\n:");
     scanf("%d", &serie[QuantidadeSeries - 1].QuantidadeTemporadas);
 
     int realoca = serie[QuantidadeSeries - 1].QuantidadeTemporadas;
     serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
-    
+
     for (int i = 0; i < serie[QuantidadeSeries-1].QuantidadeTemporadas; i++)
     { 
 
@@ -246,7 +243,7 @@ int cadastrar(int QuantidadeSeries , Serie *serie)
 
 
 
-void Alterar(int QuantidadeSeries, Serie *serie)
+void alterarSeries(int QuantidadeSeries, Serie *serie)
 {
 
     char alterar[101];
@@ -254,7 +251,7 @@ void Alterar(int QuantidadeSeries, Serie *serie)
     int contador = -1;
     char placeHolder[45];
     int realoca = 0;
-    
+
     setbuf(stdin, NULL);
     printf("Digite o nome da serie que deseja realizar modificacoes nos dados: ");
     fgets(alterar, sizeof(alterar), stdin);
@@ -279,8 +276,8 @@ void Alterar(int QuantidadeSeries, Serie *serie)
         if(encontrar == 1)
         {
             printf("serie nao encontrada, tente outro nome\n");
-            
-            Alterar(QuantidadeSeries,serie);
+
+            alterarSeries(QuantidadeSeries,serie);
 
         }else
         {
@@ -297,7 +294,7 @@ void Alterar(int QuantidadeSeries, Serie *serie)
             scanf("%d",&caso);
 
                 switch (caso) {
-                    
+
                     case 1:
 
                     printf("Voce escolheu mudar o nome da serie ");
@@ -309,23 +306,23 @@ void Alterar(int QuantidadeSeries, Serie *serie)
                     setbuf(stdin, NULL);
 
                     strcpy(serie[contador].Nome,placeHolder);
-                    
+
                     break;
 
             case 2:
-                    
+
                     printf("Voce escolheu mudar o genero da serie \n");
                     setbuf(stdin, NULL);      
-                    
+
                     printf("Digite os novos generos no modelo genero1/genero2: "); 
-                    
+
                     fgets( placeHolder, sizeof(placeHolder), stdin);
                     placeHolder[strcspn( placeHolder, "\n")] = '\0';
                     setbuf(stdin, NULL);
-                    
+
                     strcpy(serie[contador].Genero,placeHolder);
-                      
-                    
+
+
             break;
 
             case 3:
@@ -336,15 +333,15 @@ void Alterar(int QuantidadeSeries, Serie *serie)
             break;
 
             case 4:
-                    
+
                     printf("Voce escolheu mudar a plataforma de streaming da serie.\n");
                     printf("Digite a nova plataforma de streaming: ");
                     strcpy(serie[contador].Plataforma,placeHolder);             
             break;  
-            
+
             case 5:
                     printf("Voce escolheu mudar a duracao media dos episodios da serie.\n");
-                
+
                     printf("Digite a nova duracao media: ");
                     scanf("%d",&serie[contador].DuracaoMediaEpisodios);
 
@@ -359,7 +356,7 @@ void Alterar(int QuantidadeSeries, Serie *serie)
                 realoca = serie[contador].QuantidadeTemporadas;
                 serie[contador].QuantidadeEpisodiosPorTemporada = (int*)realloc(serie[contador].QuantidadeEpisodiosPorTemporada, realoca * sizeof(int));
                 serie[contador].QuantidadeEpisodiosTotais =  0;
-                
+
                 for (int i = 0; i < realoca; i++)
                 { 
 
@@ -380,26 +377,26 @@ void Alterar(int QuantidadeSeries, Serie *serie)
                     scanf("%d", &serie[contador].QuantidadeEpisodiosPorTemporada[i]);
                     serie[contador].QuantidadeEpisodiosTotais=serie[contador].QuantidadeEpisodiosTotais+serie[contador].QuantidadeEpisodiosPorTemporada[i];
                 } 
-                        
+
             break; 
 
                 default:
                     printf("Numero invalido.\n");
-                    
-                Alterar(QuantidadeSeries, serie);
+
+                alterarSeries(QuantidadeSeries, serie);
             }         
         }//else
 }// void alterar
 
 
 
-void apagar(int QuantidadeSeries, Serie *serie)
+void apagaSeries(int QuantidadeSeries, Serie *serie)
 {
 
     char deletar[101];
     int encontrar=0;
     int contador=-1;
-    
+
     setbuf(stdin, NULL);
     printf("Digite o nome da serie que deseja apagar: ");
     fgets(deletar, sizeof(deletar), stdin);
@@ -424,8 +421,8 @@ void apagar(int QuantidadeSeries, Serie *serie)
         if(encontrar == 1)
         {
             printf("serie n encontrada, tente outro nome\n");
-            
-            apagar(QuantidadeSeries,serie);
+
+            apagaSeries(QuantidadeSeries,serie);
         }else
         {
 
@@ -439,23 +436,23 @@ void apagar(int QuantidadeSeries, Serie *serie)
             serie[contador].QuantidadeEpisodiosTotais=serie[QuantidadeSeries-1].QuantidadeEpisodiosTotais;
 
             int realoca = serie[contador].QuantidadeTemporadas;
-           serie[contador].QuantidadeEpisodiosPorTemporada = realloc(serie[contador].QuantidadeEpisodiosPorTemporada ,realoca * sizeof(int));
-            
+           serie[contador].QuantidadeEpisodiosPorTemporada = (int*) realloc(serie[contador].QuantidadeEpisodiosPorTemporada ,realoca * sizeof(int));
+
             for(int i = 0; i <realoca; i++)
             {
                 serie[contador].QuantidadeEpisodiosPorTemporada[i]=serie[QuantidadeSeries-1].QuantidadeEpisodiosPorTemporada[i];
             }//for
 
             QuantidadeSeries--;
-            
+
             serie = (Serie *)realloc(serie, QuantidadeSeries * sizeof(Serie));
             imprimirSeries(serie, QuantidadeSeries);
 
-          
+
         }//else
 }// void apagar 
 
-void Pesquisa (Serie *serie, int QuantidadeSeries)
+void pesquisaSeries(Serie *serie, int QuantidadeSeries)
 { 
     int contadorSerie = 0;
     char serieBusca[41];
@@ -470,8 +467,8 @@ void Pesquisa (Serie *serie, int QuantidadeSeries)
 
     for (int i = 0; i < QuantidadeSeries; i++)
     {   
-       
-            
+
+
 
             if (strcasecmp(serieBusca,serie[i].Nome) == 0)
             {
@@ -483,7 +480,7 @@ void Pesquisa (Serie *serie, int QuantidadeSeries)
                 printf("Plataforma:%-15s ", serie[i].Plataforma);
                 printf("Duracao media por ep:%-5d ", serie[i].DuracaoMediaEpisodios);
                 printf("Quantidade de temporadas:%-5d ", serie[i].QuantidadeTemporadas);
-            
+
                 printf("episodios por temporada: ");
                 for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) 
                 {
@@ -491,19 +488,19 @@ void Pesquisa (Serie *serie, int QuantidadeSeries)
                 }
                 printf("\n \n \n");
                 break;
-                
+
             }//if
-        
-        
+
+
     }//for
 
     if (contadorSerie == 0)
     {
         printf("Nao ha series com esse nome!! Tente novamente.\n");
-        Pesquisa(serie, QuantidadeSeries);
+        pesquisaSeries(serie, QuantidadeSeries);
     }//if
 }//void pesquisa 
-            
+
 
 
 
@@ -538,7 +535,7 @@ void BuscaGenero(Serie *serie, int QuantidadeSeries)
                 printf("Plataforma:%-15s ", serie[i].Plataforma);
                 printf("Duracao media por ep:%-5d ", serie[i].DuracaoMediaEpisodios);
                 printf("Quantidade de temporadas:%-5d ", serie[i].QuantidadeTemporadas);
-            
+
                 printf("episodios por temporada: ");
                 for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) 
                 {
@@ -559,57 +556,57 @@ void BuscaGenero(Serie *serie, int QuantidadeSeries)
         BuscaGenero(serie, QuantidadeSeries);
     }//if
 }//void buscaGeneros
-            
+
 
 
 void salvaDados(Serie *serie, int QuantidadeSeries)
 {
-   
+
     FILE *arquivobin = fopen("streaming_db.dat", "wb");
 
     if (arquivobin == NULL) {
 
         perror("Erro ao abrir o arquivo.\n");
-        
+
     }else{
 
 
     for (int i = 0; i < QuantidadeSeries; i++)
     {
+
         fwrite(&serie[i].id,sizeof(int),1,arquivobin);
-           
-      
+
         fwrite(serie[i].Nome,sizeof(char),101,arquivobin);
-              
+
         fwrite(serie[i].Genero,sizeof(char),41,arquivobin);
-               
+
         fwrite(&serie[i].Classificacao,sizeof(int),1,arquivobin);
-           
+
         fwrite(serie[i].Plataforma,sizeof(char),41,arquivobin);
-               
-       
+
+
         fwrite(&serie[i].DuracaoMediaEpisodios,sizeof(int),1,arquivobin);
-             
-       
+
+
         fwrite(&serie[i].QuantidadeTemporadas,sizeof(int),1,arquivobin);
-               
+
 
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
             fwrite(&serie[i].QuantidadeEpisodiosPorTemporada[j],sizeof(int),1,arquivobin);
-                
+
         }//for
 
     }//else
     printf("\n");
     }//for
-    
+
     fclose(arquivobin);
-    
+
 }//void salva dados
 
-        
-        
+
+
 void ArquivoHistorico( Historico *historico, int indiceHistorico)
 {
 
@@ -619,7 +616,7 @@ void ArquivoHistorico( Historico *historico, int indiceHistorico)
 
     if (arquivohistorico == NULL) {
         perror("Erro ao abrir o arquivo.\n");
-        
+
     }else{
 
     fwrite(&indiceHistorico,sizeof(int),1,arquivohistorico);
@@ -629,16 +626,16 @@ void ArquivoHistorico( Historico *historico, int indiceHistorico)
         fwrite(historico[i].Nome,sizeof(char),101,arquivohistorico);
         fwrite(&historico[i].UltimaTemporadaAssistida,sizeof(int),1,arquivohistorico);
         fwrite(&historico[i].UltimoEpisodio,sizeof(int),1,arquivohistorico);
-           
-    
-           
-  
-       
+
+
+
+
+
         }//for
 
     }//else
     printf("\n");
-    
+
     fclose(arquivohistorico);
 
 }//void arquivo historico
@@ -652,32 +649,32 @@ char pulaLinha= '\n';//ta aqui na leitura pra ler o \n na primeira linha feito n
 
 
 
-     FILE *arquivohistorico = fopen("Histirico.dat", "wb");
+     FILE *arquivobinHistorico = fopen("Historico.dat", "r");
 
-    if (arquivohistorico == NULL) {
+    if (arquivobinHistorico == NULL) {
         perror("Erro ao abrir o arquivo.\n");
-        
+
     }else{
 
-    fread(&indiceHistorico,sizeof(int),1,arquivohistorico);
-    fread(&pulaLinha, sizeof(char), 1, arquivohistorico);
+    fread(&indiceHistorico,sizeof(int),1,arquivobinHistorico);
+    fread(&pulaLinha, sizeof(char), 1, arquivobinHistorico);
     for (int i = 0; i < indiceHistorico; i++)
     {
-        fread(historico[i].Nome,sizeof(char),101,arquivohistorico);
-        fread(&historico[i].UltimaTemporadaAssistida,sizeof(int),1,arquivohistorico);
-        fread(&historico[i].UltimoEpisodio,sizeof(int),1,arquivohistorico);
-           
-    
-           
-  
-       
+        fread(historico[i].Nome,sizeof(char),101,arquivobinHistorico);
+        fread(&historico[i].UltimaTemporadaAssistida,sizeof(int),1,arquivobinHistorico);
+        fread(&historico[i].UltimoEpisodio,sizeof(int),1,arquivobinHistorico);
+
+
+
+
+
         }//for
 
     }//else
     printf("\n");
-    
-    
-    fclose(arquivohistorico);
+
+
+    fclose(arquivobinHistorico);
 
     return indiceHistorico;
 
@@ -695,23 +692,24 @@ int main() {
     Serie *serie = (Serie*) malloc(QuantidadeSeries * sizeof(Serie));
     Historico *historico =(Historico*)malloc(indiceHistorico * sizeof(Historico)); 
 
-    FILE *arquivo = fopen("streaming_db.dat", "rb");
+    FILE *arquivobinSeries = fopen("streaming_db.dat", "rb");
 
-    if (arquivo == NULL) {
+    if (arquivobinSeries == NULL) {
         perror("Erro ao abrir o arquivo Binario, tentaremos excutar o arquivo csv.\n");
+        fclose(arquivobinSeries);
 
-        FILE *arquivo = fopen("streaming_db.csv", "r");
+        FILE *arquivotexto = fopen("streaming_db.csv", "r");
 
-         if (arquivo == NULL) {
+         if (arquivotexto == NULL) {
              perror("Erro ao abrir o arquivo CSV.\n");
               return 1;
         }
-        lerSeries(serie, QuantidadeSeries, arquivo);
+        lerSeries(serie, QuantidadeSeries, arquivotexto);
         salvaDados(serie,QuantidadeSeries);
 
     }else{
 
-        lerSeriesBinario(serie, QuantidadeSeries, arquivo);
+        lerSeriesBinario(serie, QuantidadeSeries, arquivobinSeries);
 
     }//else
     //esse if acima serve para conferir se tem o arquivo binario.
@@ -719,16 +717,16 @@ int main() {
 
 
 
-    FILE *arquivoCarregaHistorico = fopen("Histirico.dat", "rb");
+    FILE *arquivoCarregaHistorico = fopen("Historico.dat", "rb");
 
     if (arquivoCarregaHistorico== NULL) {
         perror("Erro ao Abrir historico, por favor assim que possivel adicione seus dados!!!  \n");
 
-   
+
 
     }else{
     indiceHistorico = lerHistoricoBinario(historico,indiceHistorico);
-    
+
     fclose(arquivoCarregaHistorico);
 
     }//else
@@ -736,7 +734,7 @@ int main() {
 
     while (menu !=9)
     {
-         
+
         printf("\n\nBusca Streaming\n\n");
         printf("Digite 1 para mostrar todas as series\n");
         printf("Digite 2 para buscar uma serie\n");
@@ -757,7 +755,7 @@ int main() {
         break;
 
         case 2: 
-            Pesquisa(serie,QuantidadeSeries);
+            pesquisaSeries(serie,QuantidadeSeries);
         break;
 
         case 3:
@@ -769,18 +767,18 @@ int main() {
         break;
 
         case 5:
-             QuantidadeSeries = cadastrar(QuantidadeSeries, serie);
+             QuantidadeSeries = cadastrarSeries(QuantidadeSeries, serie);
         break;
-        
+
         case 6:
-            Alterar(QuantidadeSeries, serie);
+            alterarSeries(QuantidadeSeries, serie);
         break;
 
         case 7: 
-            apagar(QuantidadeSeries, serie);
+            apagaSeries(QuantidadeSeries, serie);
         break;
 
-        
+
         case 8:
             salvaDados(serie,QuantidadeSeries);
             ArquivoHistorico(historico,indiceHistorico);
@@ -799,7 +797,8 @@ int main() {
 
     free(serie);
     free(historico);
-    fclose(arquivo);
+    fclose(arquivobinSeries);   
+
 
     return 0;
 }
