@@ -53,7 +53,7 @@ int IndiceSerieEscolhida;
 
 WINDOW *borda;
 
-WINDOW *menuopcoes;
+WINDOW *MenuOpcoes;
 
 int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
 
