@@ -6,14 +6,15 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <stdint.h>
+#include <time.h>
 
 typedef struct {
 
-    int contador;
+    int id;
 
-    char Nome[31];
-    char Genero[13];
-    int Classificao;
+    char Nome[60];
+    char Genero[31];
+    int Classificacao;
     char Plataforma[13];
     int QuantidadeTemporadas;
     int QuantidadeEpisodiosTotais;
@@ -23,6 +24,8 @@ typedef struct {
 } Serie;
 
 Serie *serie; 
+
+int QuantidadeSeries = 259;
 
 typedef struct {
 
@@ -35,17 +38,45 @@ typedef struct {
 
 Historico *historico;
 
-FILE *arquivotexto;  //serviŕa para abrir o arquivo fonte com os dados das séries
+FILE *arquivotexto;
 
-FILE *arquivobinSeries;  //criar arquivo binário como "arquivobinSeries.dat"
+FILE *arquivobinSeries;  //ponteiro que vai apontar para o arquivo binário criado após a primeira execução do código
 
-FILE *arquivobinHistorico;  //criar arquivo binário como "arquivobinHistorico.dat"
+FILE *arquivobinHistorico;
+
+char *recebeChar;
+int recebeInt;
+
+char *StringAux;
+int IntAux;
+int IndiceSerieEscolhida;
+
+WINDOW *borda;
+
+WINDOW *MenuOpcoes;
+
+int yterminal, xterminal;  //variáveis que guardam as dimensões máximas do terminal
+
+int yborda, xborda;  //variáveis que guardam as dimensões da janela onde é desenhada a borda
+
+unsigned int OpcoesMin, OpcoesMax;
 
 // a logo foi separada por strings e sem struct por conta de problemas na programação
 char *stringlogopt1 = "  __                                                             \n";
 char *stringlogopt2 = " (_ _|_ ._ _   _. ._ _  o ._   _    |\\/|  _. ._   _.  _   _  ._ \n";
 char *stringlogopt3 = " __) |_ | (/_ (_| | | | | | | (_|   |  | (_| | | (_| (_| (/_ |   \n";
 char *stringlogopt4 = "                               _|                     _|         \n";
+
+void MensagemBoasVindas();  //função utilizada em projetostreaming.c, com animações d emensagem de
+
+//funções de menusecundario.c
+// void MenuSecundario();
+// void CadastrarSerie();
+// void AlterarSerie();
+// void RemoverSerie();
+// void ListaSerie();
+// void ListarPorGenero();
+// void PesquisaSerie();
 
 #endif 
 
