@@ -22,7 +22,7 @@ int main() {
 
     WINDOW *EntradaInfo = newwin(3, xborda - 30, yterminal / 2, (xterminal - (xborda - 30)) / 2);
 
-    for (int i = 0; i < QuantidadeSeries; i++) 
+    for (int i = 0; i < QuantidadeSeries; i++)
     {
         serie[i].QuantidadeEpisodiosTotais = 0;
 
@@ -73,11 +73,12 @@ void MenuSecundario(WINDOW *EntradaInfo) {
     curs_set(FALSE); //desabilita o cursor, limpa a janela e printa logo e menu com opções
     wclear(borda);
     wrefresh(borda);
-        
+
     mvwprintw(borda, yborda / 2 - 7, xborda / 2 - 30, "%s", stringlogopt1);
     mvwprintw(borda, yborda / 2 - 6, xborda / 2 - 30, "%s", stringlogopt2);
     mvwprintw(borda, yborda / 2 - 5, xborda / 2 - 30, "%s", stringlogopt3);
     mvwprintw(borda, yborda / 2 - 4, xborda / 2 - 30, "%s", stringlogopt4);
+    
     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha noavmente a borda da janela
     wrefresh(borda);
 
@@ -102,7 +103,7 @@ void MenuSecundario(WINDOW *EntradaInfo) {
 
     switch(opcao) {
 
-        case KEY_UP:
+        case KEY_UP: 
         highlight--;
            if(highlight < 0) {
 
@@ -175,6 +176,7 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     curs_set(TRUE);
     cbreak();
     echo();
+    
     QuantidadeSeries++;
     char *StringAux = (char*) malloc (4 * sizeof(char)); //string auxiliar para coleta de inteiro
     serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));  //realoca para novo tamanho
