@@ -11,6 +11,7 @@ int main() {
     noecho();  //desabilita a visualização da entrada do teclado do usuário no terminal
     curs_set(FALSE);  //desabilita a visualização do cursor dentro do temrinal
 
+    serie = (Serie*) malloc(sizeof(Serie) * QuantidadeSeries);
     getmaxyx(stdscr, yterminal, xterminal);  //coleta as dimensões máximas da janela do terminal
 
     // mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");  //animação de carregamento inicial
@@ -235,58 +236,58 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem1)) / 2; //variável utilizada no cálculo da centralização da mensagem
 
-    for(unsigned int a = 0; a <= strlen(mensagem1) - 1; a++) {  //printa na tela a mensagem 1
+    // for(unsigned int a = 0; a <= strlen(mensagem1) - 1; a++) {  //printa na tela a mensagem 1
 
-        mvwaddch(borda, yborda / 2 - 5, a + x, mensagem1[a]);
-        wmove(borda, yborda / 2 - 5, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 5, a + x, mensagem1[a]);
+    //     wmove(borda, yborda / 2 - 5, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem2)) / 2;
+    // x = (xborda - strlen(mensagem2)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem2) - 1; a++) {  //printa na tela a mensagem 2
+    // for(unsigned int a = 0; a <= strlen(mensagem2) - 1; a++) {  //printa na tela a mensagem 2
 
-        mvwaddch(borda, yborda / 2 - 3, a + x, mensagem2[a]);
-        wmove(borda, yborda / 2 - 3, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 3, a + x, mensagem2[a]);
+    //     wmove(borda, yborda / 2 - 3, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem3)) / 2;
+    // x = (xborda - strlen(mensagem3)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem3) - 1; a++) {  //printa na tela a mensagem 3
+    // for(unsigned int a = 0; a <= strlen(mensagem3) - 1; a++) {  //printa na tela a mensagem 3
 
-        mvwaddch(borda, yborda / 2 - 2, a + x, mensagem3[a]);
-        wmove(borda, yborda / 2 - 2, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 2, a + x, mensagem3[a]);
+    //     wmove(borda, yborda / 2 - 2, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem4)) / 2;
+    // x = (xborda - strlen(mensagem4)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem4) - 1; a++) {  //printa na tela a mensagem 4
+    // for(unsigned int a = 0; a <= strlen(mensagem4) - 1; a++) {  //printa na tela a mensagem 4
 
-        mvwaddch(borda, yborda / 2 - 1, a + x, mensagem4[a]);
-        wmove(borda, yborda / 2 - 1, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 1, a + x, mensagem4[a]);
+    //     wmove(borda, yborda / 2 - 1, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem5)) / 2;
+    // x = (xborda - strlen(mensagem5)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem5) - 1; a++) {  //printa na tela a mensagem 5
+    // for(unsigned int a = 0; a <= strlen(mensagem5) - 1; a++) {  //printa na tela a mensagem 5
 
-        mvwaddch(borda, yborda / 2 + 1, a + x, mensagem5[a]);
-        wmove(borda, yborda / 2 + 1, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 + 1, a + x, mensagem5[a]);
+    //     wmove(borda, yborda / 2 + 1, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
     curs_set(FALSE);
 
@@ -350,7 +351,6 @@ void MensagemBoasVindas() {
                 
                 wclear(borda);
                 arquivobinSeries = fopen("arquivobinSeries.dat", "wb");
-                arquivobinHistorico = fopen("arquivobinHistorico.dat", "wb");
                 arquivotexto = fopen("streaming_db.txt", "r");
 
                 if(arquivobinSeries == NULL) {  //printa o retorno do ponteiro de arquivo binário das séries
@@ -416,43 +416,61 @@ void MensagemBoasVindas() {
 
                 }
 
-                if(arquivobinHistorico == NULL || arquivobinSeries == NULL || arquivotexto == NULL) {  //se houver qualquer tipo de erro na abertura de qualquer arquivo, sai do programa
-
-                    getch();
-                    endwin();
-                    exit(1);
-
-                }
-
                 for (int i = 0; i < QuantidadeSeries; i++) {
                     
+                    fscanf(arquivotexto, "%d,", &serie[i].id);
+                    fscanf(arquivotexto, "%[^,\n],", serie[i].Nome);
+                    fscanf(arquivotexto, "%d,", &serie[i].Classificacao);
+                    fscanf(arquivotexto, "%[^,\n],", serie[i].Plataforma);
+                    fscanf(arquivotexto, "%d,", &serie[i].DuracaoMediaEpisodios);
+                    fscanf(arquivotexto, "%d,", &serie[i].QuantidadeTemporadas);
+
+                    int realoca = serie[i].QuantidadeTemporadas;
+                    serie[i].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
+                                                                                        
+                    for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
+
+                        fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
+      
+                        serie[i].QuantidadeEpisodiosTotais=serie[i].QuantidadeEpisodiosTotais+serie[i].QuantidadeEpisodiosPorTemporada[j];
+        }//for
+                        
+                }//for
+
+                for(int i = 0; i < QuantidadeSeries; i++) {
+
                     fwrite(&serie[i].id,sizeof(int),1,arquivobinSeries);
            
-                    fwrite(serie[i].Nome,sizeof(char),101,arquivobinSeries);
+                    fwrite(serie[i].Nome,sizeof(char),strlen(serie[i].Nome),arquivobinSeries);
               
-                    fwrite(serie[i].Genero,sizeof(char),41,arquivobinSeries);
+                    fwrite(serie[i].Genero,sizeof(char),strlen(serie[i].Genero),arquivobinSeries);
                
                     fwrite(&serie[i].Classificacao,sizeof(int),1,arquivobinSeries);
            
-                    fwrite(serie[i].Plataforma,sizeof(char),41,arquivobinSeries);
+                    fwrite(serie[i].Plataforma,sizeof(char),strlen(serie[i].Plataforma),arquivobinSeries);
        
                     fwrite(&serie[i].DuracaoMediaEpisodios,sizeof(int),1,arquivobinSeries);
              
                     fwrite(&serie[i].QuantidadeTemporadas,sizeof(int),1,arquivobinSeries);
-               
 
                     for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
                         
                         fwrite(&serie[i].QuantidadeEpisodiosPorTemporada[j],sizeof(int),1,arquivobinSeries);
                         
                         }//for
-                        
-                }//for
-    
+
+                }
+
+                // if(arquivobinHistorico == NULL || arquivobinSeries == NULL || arquivotexto == NULL) {  //se houver qualquer tipo de erro na abertura de qualquer arquivo, sai do programa
+
+                //     getch();
+                //     endwin();
+                //     exit(1);
+
+                // }
+
                 fclose(arquivobinSeries);
 
-                clear();
-                refresh();
                 x = (xborda - strlen("Os arquivos foram lidos e criados com sucesso, pressione qualquer tecla para prosseguir")) / 2;
                 mvwprintw(borda, yborda / 2 + 1, x, "Os arquivos foram lidos e criados com sucesso, pressione qualquer tecla para prosseguir");
                 wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
