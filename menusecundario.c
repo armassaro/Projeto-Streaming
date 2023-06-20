@@ -1,5 +1,7 @@
 #include "projetostreaming.h"
 
+void MenuSecundario(WINDOW *EntradaInfo);
+
 int main() {
 
     initscr();
@@ -8,13 +10,13 @@ int main() {
     curs_set(FALSE);
     delwin(MenuOpcoes);
 
-    serie = (Serie*) malloc(sizeof(Serie) * 259);  //aloca memória pro vetor struct de séries
+    serie = (Serie*) malloc(sizeof(Serie) * QuantidadeSeries);  //aloca memória pro vetor struct de séries
 
     getmaxyx(stdscr, yterminal, xterminal);  //consegue os valores máximos de resolução do terminal
     
     arquivotexto = fopen("streaming_db.txt", "r");
     arquivobinSeries = fopen("arquivobinSeries.dat", "rb");
-    arquivobinHistorico = fopen("arquivobinHistorico.dat", "rb");
+    // arquivobinHistorico = fopen("arquivobinHistorico.dat", "rb");
     
     borda = newwin(yterminal - 7, xterminal - 7, 4, 4);
     
@@ -26,24 +28,27 @@ int main() {
     {
         serie[i].QuantidadeEpisodiosTotais = 0;
 
-        fread(&serie[i].id, sizeof(int), 1, arquivobinSeries);
-        fread(serie[i].Nome, sizeof(char), 101, arquivobinSeries);
-        fread(serie[i].Genero, sizeof(char), 41, arquivobinSeries);
-        fread(&serie[i].Classificacao, sizeof(int), 1, arquivobinSeries);
-        fread(serie[i].Plataforma, sizeof(char), 41, arquivobinSeries);
-        fread(&serie[i].DuracaoMediaEpisodios, sizeof(int), 1, arquivobinSeries);
-        fread(&serie[i].QuantidadeTemporadas, sizeof(int), 1, arquivobinSeries);
+        IntAux = 0;
+
+        fscanf(arquivotexto, "%d,", &serie[i].id);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Nome);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Genero);
+        fscanf(arquivotexto, "%d,", &serie[i].Classificacao);
+        fscanf(arquivotexto, "%[^,\n],", serie[i].Plataforma);
+        fscanf(arquivotexto, "%d,", &serie[i].DuracaoMediaEpisodios);
+        fscanf(arquivotexto, "%d,", &serie[i].QuantidadeTemporadas);
 
         int realoca = serie[i].QuantidadeTemporadas;
         serie[i].QuantidadeEpisodiosPorTemporada = (int*) malloc(realoca * sizeof(int));
         
         for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) {
 
-            fread(&serie[i].QuantidadeEpisodiosPorTemporada[j], sizeof(int), 1, arquivobinSeries);
-      
-            serie[i].QuantidadeEpisodiosTotais=serie[i].QuantidadeEpisodiosTotais+serie[i].QuantidadeEpisodiosPorTemporada[j];
+            fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
+            IntAux = IntAux + serie[i].QuantidadeEpisodiosPorTemporada[j];
         
         }//for
+
+         serie[i].QuantidadeEpisodiosTotais = IntAux;
 
     }//for
 
@@ -105,6 +110,7 @@ void MenuSecundario(WINDOW *EntradaInfo) {
 
         case KEY_UP: 
         highlight--;
+        
            if(highlight < 0) {
 
                 highlight = 0;
@@ -728,7 +734,7 @@ void ListaSerie() {
     curs_set(FALSE);
 
     OpcoesMin = 0;
-    OpcoesMax = 30;
+    OpcoesMax = yborda - 2;
     int highlight = 0;
     int opcao;
     int yopcao = 0;
@@ -741,13 +747,14 @@ void ListaSerie() {
         yopcao = 0;
 
         for (int a = OpcoesMin; a < OpcoesMax; a++) {
+            
             if (a == highlight) {
 
                 wattron(borda, A_REVERSE);
 
             }
 
-            int x = (40 - strlen(serie[a].Nome)) / 2;
+            int x = (50 - strlen(serie[a].Nome)) / 2;
             mvwprintw(borda, yopcao + 1, x, "%s", serie[a].Nome);
             wattroff(borda, A_REVERSE);
             yopcao++;
@@ -780,11 +787,16 @@ void ListaSerie() {
     sprintf(StringAux, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
     mvwprintw(borda, (yborda - 8) / 2 + 6, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
     
-    char *StringAux1 = (char*) malloc(sizeof(char) * 100);
+    char *StringAux1 = (char*) malloc(sizeof(char) * 500);
 
     strcpy(StringAux, " ");
     for(int a = 0; a < serie[highlight].QuantidadeTemporadas; a++) {
 
+        if(a > 20) {
+
+            break;
+
+        }
         sprintf(StringAux1, "%i ", serie[highlight].QuantidadeEpisodiosPorTemporada[a]);
         strcat(StringAux, StringAux1);
 
@@ -807,10 +819,20 @@ void ListaSerie() {
         switch (opcao) {
             case KEY_DOWN:
                 highlight++;
+                if(highlight >= QuantidadeSeries - 1) {
+
+                    highlight = QuantidadeSeries - 2;
+                        
+                }
                 if (highlight >= OpcoesMax) {
 
                     OpcoesMax = highlight + 1;
-                    OpcoesMin = OpcoesMax - 30;
+                    if(OpcoesMax > QuantidadeSeries) {
+
+                        OpcoesMax = highlight - 1;
+
+                    }
+                    OpcoesMin = OpcoesMax - (yborda - 2);
 
                 }
                 break;
@@ -818,19 +840,23 @@ void ListaSerie() {
             case KEY_UP:
                 highlight--;
                 if (highlight < 0) {
+                    
                     highlight = 0;
+
+                }
+
                     if (highlight < OpcoesMin) {
 
                         OpcoesMin = highlight;
-                        OpcoesMax = OpcoesMin + 30;
+                        OpcoesMax = OpcoesMin + (yborda - 2);
 
                     }
-                }
             break;
 
             case 's':
             free(StringAux);
             return;
+
         }
     }
 }
