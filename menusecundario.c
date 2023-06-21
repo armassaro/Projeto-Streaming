@@ -197,6 +197,8 @@ void CadastrarSerie(WINDOW *EntradaInfo) {
     serie[QuantidadeSeries - 1].id = QuantidadeSeries;  //atribuição de id para a nova série a ser colocada
 
     ColetaNomeCadastrarSerie:
+    clear();
+    refresh();
     wclear(borda);
     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
     wrefresh(borda);
@@ -752,6 +754,11 @@ void ListarSeries() {
         wclear(borda);
         yopcao = 0;
 
+        if(OpcoesMax > QuantidadeSeries) {
+
+            OpcoesMax = QuantidadeSeries;
+
+        }
         for (int a = OpcoesMin; a < OpcoesMax; a++) {
             
             if (a == highlight) {
@@ -827,12 +834,13 @@ void ListarSeries() {
                 highlight++;
                 if(highlight >= QuantidadeSeries - 1) {
 
-                    highlight = QuantidadeSeries - 2;
+                    highlight = QuantidadeSeries - 1;
                         
                 }
                 if (highlight >= OpcoesMax) {
 
                     OpcoesMax = highlight + 1;
+
                     if(OpcoesMax > QuantidadeSeries) {
 
                         OpcoesMax = highlight - 1;
