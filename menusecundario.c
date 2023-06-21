@@ -25,6 +25,7 @@ int main() {
 
     for (int i = 0; i < QuantidadeSeries; i++)  //print de coleta de informações do arquivo binário para a struct de séries
     {
+        
         serie[i].QuantidadeEpisodiosTotais = 0;
 
         IntAux = 0;
@@ -51,7 +52,7 @@ int main() {
 
     }//for
 
-    MenuOpcoes = newwin(11, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
+    MenuOpcoes = newwin(12, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
 
     keypad(MenuOpcoes, TRUE);  //habilita entrada de setas
     werase(MenuOpcoes);
@@ -65,9 +66,9 @@ int main() {
 
 void MenuSecundario(WINDOW *EntradaInfo) {
 
-    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar Series", "Listar por Genero", "Pesquisar", "Plataforma mais assistida", "Genero mais assistido", "Sair"};  //matriz contendo as opções do menu
-    typedef enum {cadastrarSerie = 0, alterarSerie, removerSerie, listarSeries, listarPorGenero, pesquisarSerie, plataformaMaisAssistida, generoMaisAssistido, sair} OpcoesSwitch;
-    int opcoes = 9;
+    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar series", "Listar por genero", "Pesquisar", "Plataforma mais assistida", "Genero mais assistido", "Salvar historico", "Sair"};  //matriz contendo as opções do menu
+    typedef enum {cadastrarSerie = 0, alterarSerie, removerSerie, listarSeries, listarPorGenero, pesquisarSerie, plataformaMaisAssistida, generoMaisAssistido, salvarHistorico, sair} OpcoesSwitch;
+    int opcoes = 10;
     int opcao;
     int highlight = 0;  //variável utilizada para representar a opção que está sendo selecionada dentro do menu
 
@@ -160,6 +161,10 @@ void MenuSecundario(WINDOW *EntradaInfo) {
 
                     case generoMaisAssistido:
                     GeneroMaisAssistido();
+                    break;
+
+                    case salvarHistorico:
+                    SalvarHistorico(EntradaInfo);
                     break;
                     
                     case sair:
@@ -1339,6 +1344,137 @@ void GeneroMaisAssistido() {
 
     free(contagemGeneros);
     free(StringAux);
+
+    return;
+
+}
+
+void SalvarHistorico(WINDOW *EntradaInfo) {
+
+    curs_set(TRUE);
+    echo();
+    nocbreak();
+
+    bool SerieEncontrada = FALSE;
+    char serieBusca[60];
+    int indiceHistorico = 0;
+    StringAux = (char*) malloc(sizeof(char) * 100);
+
+    ColetaNomeSalvarHistorico:
+    clear();
+    refresh();
+    wclear(borda);
+    wrefresh(borda);
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(borda);
+    wborder(EntradaInfo, '#', '#', '-', '-', '-', '-', '-', '-');
+    wrefresh(EntradaInfo);
+    mvwprintw(borda, yborda / 2 - 3, (xborda - strlen("Digite o nome da serie que deseja pesquisar")) / 2, "Digite o nome da serie que deseja pesquisar");
+    wrefresh(borda);
+    move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
+    refresh();
+    getnstr(serieBusca, 60);
+    setbuf(stdin, NULL);
+    curs_set(FALSE);
+
+    for (int i = 0; i < QuantidadeSeries; i++)
+    {
+
+            if (strcasecmp(serieBusca,serie[i].Nome) == 0)
+            {
+
+                indiceHistorico++;
+                SerieEncontrada = TRUE;
+
+                wclear(borda);
+                wclear(EntradaInfo);
+
+                strcpy(StringAux, "Nome: ");
+                strcat(StringAux, serie[i].Nome);
+                mvwprintw(borda, (yborda - 8) / 2 - 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+                sprintf(StringAux, "ID: %i", serie[i].id);
+                mvwprintw(borda, (yborda - 8) / 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+                strcpy(StringAux, "Genero: ");
+                strcat(StringAux, serie[i].Genero);
+                mvwprintw(borda, (yborda - 8) / 2 + 2, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+                sprintf(StringAux, "Classficacao: %i", serie[i].Classificacao);
+                mvwprintw(borda, (yborda - 8) / 2 + 3, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+                strcpy(StringAux, "Plataforma: ");
+                strcat(StringAux, serie[i].Plataforma);
+                mvwprintw(borda, (yborda - 8) / 2 + 4, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+                sprintf(StringAux, "Quantidade de temporadas: %i", serie[i].QuantidadeTemporadas);
+                mvwprintw(borda, (yborda - 8) / 2 + 5, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+    
+                sprintf(StringAux, "Quantidade total de episodios: %i", serie[i].QuantidadeEpisodiosTotais);
+                mvwprintw(borda, (yborda - 8) / 2 + 6, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+
+                char *StringAux1 = (char*) malloc(sizeof(char) * 500);
+
+                strcpy(StringAux, " ");
+                for(int a = 0; a < serie[i].QuantidadeTemporadas; a++) {
+
+                    if(a > 20) {
+
+                        break;
+
+                    }
+                    sprintf(StringAux1, "%i ", serie[i].QuantidadeEpisodiosPorTemporada[a]);
+                    strcat(StringAux, StringAux1);
+
+                }
+    
+                strcpy(StringAux1, StringAux);
+                strcpy(StringAux, "Quantidade de episodios por temporada:");
+                strcat(StringAux, StringAux1);
+                mvwprintw(borda, (yborda - 8) / 2 + 7, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+
+                sprintf(StringAux, "Duracao media dos episodios: %i", serie[i].DuracaoMediaEpisodios);
+                mvwprintw(borda, (yborda - 8) / 2 + 8, (xborda - strlen(StringAux)) / 2, "%s", StringAux);
+                mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione qualquer tecla para prosseguir")) / 2, "Pressione qualquer tecla para prosseguir");
+                wrefresh(borda);
+
+                free(StringAux1);
+
+                wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
+                wrefresh(borda);
+
+                // for (int j = 0; j < serie[i].QuantidadeTemporadas; j++) 
+                // {
+                //     printf("%d ", serie[i].QuantidadeEpisodiosPorTemporada[j]);
+                // }
+                // printf("\n \n \n");
+
+                historico=(Historico*)realloc(historico,indiceHistorico * sizeof(Historico));
+                getch();
+                // strcpy(historico[indiceHistorico].Nome,serie[i].Nome);
+
+                // printf("digite a ultima temporada assistida: ");
+                // scanf("%d",&historico[indiceHistorico].UltimaTemporada);
+
+                // printf("digite o ultimo Episodio assistido: ");
+                // scanf("%d",&historico[indiceHistorico].UltimoEpisodio);
+
+                // printf("Os dados do historico da serie %s foi atualizado!! ",historico[indiceHistorico].Nome); 
+                break;
+
+            }//if
+
+
+    }//for
+
+    // if (SerieEncontrada == FALSE)
+    // {
+
+    //     printf("Não há séries com esse nome !! Tente novamente.\n");
+    //     goto ColetaNomeSalvarHistorico;
+
+    // }//if
 
     return;
 
