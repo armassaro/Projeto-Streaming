@@ -22,10 +22,11 @@ int main() {
     getmaxyx(borda, yborda, xborda);  //consegue as dimensões da janela de borda
 
     WINDOW *EntradaInfo = newwin(3, xborda - 30, yterminal / 2, (xterminal - (xborda - 30)) / 2);   //ponteiro utilizado para entrada de informações do usuário
-
-    for (int i = 0; i < QuantidadeSeries; i++)  //print de coleta de informações do arquivo binário para a struct de séries
+    
+    fscanf(arquivotexto, "%d,",&QuantidadeSeries);
+    serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));
+    for (int i = 0; i < QuantidadeSeries+1; i++)  //print de coleta de informações do arquivo binário para a struct de séries
     {
-        
         serie[i].QuantidadeEpisodiosTotais = 0;
 
         IntAux = 0;
@@ -52,7 +53,7 @@ int main() {
 
     }//for
 
-    MenuOpcoes = newwin(12, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
+    MenuOpcoes = newwin(11, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
 
     keypad(MenuOpcoes, TRUE);  //habilita entrada de setas
     werase(MenuOpcoes);
@@ -63,6 +64,7 @@ int main() {
     return 0;
 
 }
+
 
 void MenuSecundario(WINDOW *EntradaInfo) {
 
