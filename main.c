@@ -14,101 +14,101 @@ int main() {
     serie = (Serie*) malloc(sizeof(Serie) * QuantidadeSeries);
     getmaxyx(stdscr, yterminal, xterminal);  //coleta as dimensões máximas da janela do terminal
 
-    mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");  //animação de carregamento inicial
-    mvprintw((yterminal / 2) - 2, 2, "[");
-    mvprintw((yterminal / 2) - 2, xterminal - 2, "]");
-    refresh();
+    // mvprintw(yterminal / 2, xterminal / 2 - 4, "Carregando...\n");  //animação de carregamento inicial
+    // mvprintw((yterminal / 2) - 2, 2, "[");
+    // mvprintw((yterminal / 2) - 2, xterminal - 2, "]");
+    // refresh();
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //tela de carregamento
+    // for(int a = 4; a <= xterminal - 4; a++) {  //tela de carregamento
 
-        mvprintw((yterminal / 2) - 2, a, ">");
+    //     mvprintw((yterminal / 2) - 2, a, ">");
         
-        refresh();
-        usleep(20000);
+    //     refresh();
+    //     usleep(20000);
 
-        mvprintw((yterminal / 2) - 2, a, "|");
+    //     mvprintw((yterminal / 2) - 2, a, "|");
 
-        refresh();
+    //     refresh();
 
-        usleep(5000);
+    //     usleep(5000);
 
-    }
+    // }
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //preenche os riscos printados com hashtag
+    // for(int a = 4; a <= xterminal - 4; a++) {  //preenche os riscos printados com hashtag
 
-        mvprintw((yterminal / 2) - 2, a, "#");
+    //     mvprintw((yterminal / 2) - 2, a, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(6000);
+    //     usleep(6000);
 
-    }
+    // }
 
-    clear();  //limpa o terminal 
+    // clear();  //limpa o terminal 
 
-    mvprintw((yterminal / 2) - 2, xterminal / 2, "#");  //printa o primeiro hashtag centralizado na tela
+    // mvprintw((yterminal / 2) - 2, xterminal / 2, "#");  //printa o primeiro hashtag centralizado na tela
 
-    for(int a = yterminal / 2; a <= yterminal - 4; a++) {  //move um hashtag centralizado pra baixo
+    // for(int a = yterminal / 2; a <= yterminal - 4; a++) {  //move um hashtag centralizado pra baixo
 
-        mvprintw(a, xterminal / 2, "#");
+    //     mvprintw(a, xterminal / 2, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-        clear();
+    //     clear();
 
-    }
+    // }
 
-    for(int a = xterminal / 2; a <= xterminal - 4; a++) {  //move o hashtag pra direita
+    // for(int a = xterminal / 2; a <= xterminal - 4; a++) {  //move o hashtag pra direita
 
-        mvprintw(yterminal - 4, a, "#");
+    //     mvprintw(yterminal - 4, a, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-        clear();
+    //     clear();
 
-    }
+    // }
 
-    for(int a = yterminal - 4; a >= 4; a--) {  //sobe e preenche coluna direita com hashtag
+    // for(int a = yterminal - 4; a >= 4; a--) {  //sobe e preenche coluna direita com hashtag
 
-        mvprintw(a, xterminal - 4, "#");
+    //     mvprintw(a, xterminal - 4, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
-    for(int a = xterminal - 4; a >= 4; a--) {  //vai pra esquerda e preenche linha de cima com traço
+    // for(int a = xterminal - 4; a >= 4; a--) {  //vai pra esquerda e preenche linha de cima com traço
 
-        mvprintw(4, a, "-");
-        refresh();
+    //     mvprintw(4, a, "-");
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
-    for(int a = 5; a <= yterminal - 4; a++) {  //desce e preenche coluna esquerda com hashtag
+    // for(int a = 5; a <= yterminal - 4; a++) {  //desce e preenche coluna esquerda com hashtag
 
-        mvprintw(a, 4, "#");
+    //     mvprintw(a, 4, "#");
         
-        refresh();
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
-    for(int a = 4; a <= xterminal - 4; a++) {  //vai pra direita e preenche linha inferior com traço
+    // for(int a = 4; a <= xterminal - 4; a++) {  //vai pra direita e preenche linha inferior com traço
 
-        mvprintw(yterminal - 4, a, "-");
-        refresh();
+    //     mvprintw(yterminal - 4, a, "-");
+    //     refresh();
 
-        usleep(10000);
+    //     usleep(10000);
 
-    }
+    // }
 
     borda = newwin(yterminal - 7, xterminal - 7, 4, 4);  //cria janela para representar a borda desenhada após as animações executadas
 
@@ -236,58 +236,58 @@ void MensagemBoasVindas() {
 
     x = (xborda - strlen(mensagem1)) / 2; //variável utilizada no cálculo da centralização da mensagem
 
-    for(unsigned int a = 0; a <= strlen(mensagem1) - 1; a++) {  //printa na tela a mensagem 1
+    // for(unsigned int a = 0; a <= strlen(mensagem1) - 1; a++) {  //printa na tela a mensagem 1
 
-        mvwaddch(borda, yborda / 2 - 5, a + x, mensagem1[a]);
-        wmove(borda, yborda / 2 - 5, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 5, a + x, mensagem1[a]);
+    //     wmove(borda, yborda / 2 - 5, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem2)) / 2;
+    // x = (xborda - strlen(mensagem2)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem2) - 1; a++) {  //printa na tela a mensagem 2
+    // for(unsigned int a = 0; a <= strlen(mensagem2) - 1; a++) {  //printa na tela a mensagem 2
 
-        mvwaddch(borda, yborda / 2 - 3, a + x, mensagem2[a]);
-        wmove(borda, yborda / 2 - 3, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 3, a + x, mensagem2[a]);
+    //     wmove(borda, yborda / 2 - 3, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem3)) / 2;
+    // x = (xborda - strlen(mensagem3)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem3) - 1; a++) {  //printa na tela a mensagem 3
+    // for(unsigned int a = 0; a <= strlen(mensagem3) - 1; a++) {  //printa na tela a mensagem 3
 
-        mvwaddch(borda, yborda / 2 - 2, a + x, mensagem3[a]);
-        wmove(borda, yborda / 2 - 2, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 2, a + x, mensagem3[a]);
+    //     wmove(borda, yborda / 2 - 2, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem4)) / 2;
+    // x = (xborda - strlen(mensagem4)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem4) - 1; a++) {  //printa na tela a mensagem 4
+    // for(unsigned int a = 0; a <= strlen(mensagem4) - 1; a++) {  //printa na tela a mensagem 4
 
-        mvwaddch(borda, yborda / 2 - 1, a + x, mensagem4[a]);
-        wmove(borda, yborda / 2 - 1, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 - 1, a + x, mensagem4[a]);
+    //     wmove(borda, yborda / 2 - 1, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
-    x = (xborda - strlen(mensagem5)) / 2;
+    // x = (xborda - strlen(mensagem5)) / 2;
 
-    for(unsigned int a = 0; a <= strlen(mensagem5) - 1; a++) {  //printa na tela a mensagem 5
+    // for(unsigned int a = 0; a <= strlen(mensagem5) - 1; a++) {  //printa na tela a mensagem 5
 
-        mvwaddch(borda, yborda / 2 + 1, a + x, mensagem5[a]);
-        wmove(borda, yborda / 2 + 1, a + x + 1);
-        wrefresh(borda);
-        usleep(30000);
+    //     mvwaddch(borda, yborda / 2 + 1, a + x, mensagem5[a]);
+    //     wmove(borda, yborda / 2 + 1, a + x + 1);
+    //     wrefresh(borda);
+    //     usleep(30000);
 
-    }
+    // }
 
     curs_set(FALSE);
 
@@ -437,11 +437,11 @@ void MensagemBoasVindas() {
                         fscanf(arquivotexto, "%d,", &serie[i].QuantidadeEpisodiosPorTemporada[j]);
       
                         serie[i].QuantidadeEpisodiosTotais=serie[i].QuantidadeEpisodiosTotais+serie[i].QuantidadeEpisodiosPorTemporada[j];
-        }//for
-                         fwrite(&QuantidadeSeries,sizeof(int),1,arquivobinSeries);
-                        serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));
-                }//for
+                         }//for
+                    }//for
 
+                fwrite(&QuantidadeSeries,sizeof(int),1,arquivobinSeries);
+                serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));
                 for(int i = 0; i < QuantidadeSeries; i++) {
 
                     fwrite(&serie[i].id,sizeof(int),1,arquivobinSeries);
