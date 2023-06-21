@@ -8,7 +8,6 @@ int main() {
     noecho();
     cbreak();
     curs_set(FALSE);
-    delwin(MenuOpcoes);
 
     serie = (Serie*) malloc(sizeof(Serie) * QuantidadeSeries);  //aloca memória pro vetor struct de séries
 
@@ -22,9 +21,9 @@ int main() {
     
     getmaxyx(borda, yborda, xborda);  //consegue as dimensões da janela de borda
 
-    WINDOW *EntradaInfo = newwin(3, xborda - 30, yterminal / 2, (xterminal - (xborda - 30)) / 2);
+    WINDOW *EntradaInfo = newwin(3, xborda - 30, yterminal / 2, (xterminal - (xborda - 30)) / 2);   //ponteiro utilizado para entrada de informações do usuário
 
-    for (int i = 0; i < QuantidadeSeries; i++)
+    for (int i = 0; i < QuantidadeSeries; i++)  //print de coleta de informações do arquivo binário para a struct de séries
     {
         serie[i].QuantidadeEpisodiosTotais = 0;
 
@@ -52,12 +51,12 @@ int main() {
 
     }//for
 
-    MenuOpcoes = newwin(9, 23, yterminal / 2 + 1, xterminal / 2 - 9);
+    MenuOpcoes = newwin(11, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
 
     keypad(MenuOpcoes, TRUE);  //habilita entrada de setas
     werase(MenuOpcoes);
 
-    MenuSecundario(EntradaInfo);
+    MenuSecundario(EntradaInfo);  
 
     endwin();
     return 0;
@@ -66,107 +65,116 @@ int main() {
 
 void MenuSecundario(WINDOW *EntradaInfo) {
 
-    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar Series", "Listar por Genero", "Pesquisar", "Sair"};
-    int opcoes = 7;
+    char *menuescolhas[] = {"Cadastrar", "Alterar", "Remover", "Listar Series", "Listar por Genero", "Pesquisar", "Plataforma mais assistida", "Genero mais assistido", "Sair"};  //matriz contendo as opções do menu
+    typedef enum {cadastrarSerie = 0, alterarSerie, removerSerie, listarSeries, listarPorGenero, pesquisarSerie, plataformaMaisAssistida, generoMaisAssistido, sair} OpcoesSwitch;
+    int opcoes = 9;
     int opcao;
-    int highlight = 0;
+    int highlight = 0;  //variável utilizada para representar a opção que está sendo selecionada dentro do menu
 
     while(1) { 
+        
+        cbreak();  //habilita a entrada imediata
+        noecho();  //desabilita a escrita do usuário dentro do terminal
+        curs_set(FALSE); //desabilita o cursor, limpa a janela e printa logo e menu com opções
     
-    cbreak();
-    noecho();
-    curs_set(FALSE); //desabilita o cursor, limpa a janela e printa logo e menu com opções
-    wclear(borda);
-    wrefresh(borda);
+        wclear(borda);
+        wrefresh(borda);
 
-    mvwprintw(borda, yborda / 2 - 7, xborda / 2 - 30, "%s", stringlogopt1);
-    mvwprintw(borda, yborda / 2 - 6, xborda / 2 - 30, "%s", stringlogopt2);
-    mvwprintw(borda, yborda / 2 - 5, xborda / 2 - 30, "%s", stringlogopt3);
-    mvwprintw(borda, yborda / 2 - 4, xborda / 2 - 30, "%s", stringlogopt4);
+        mvwprintw(borda, yborda / 2 - 7, (xborda - strlen(stringlogopt1)) / 2, "%s", stringlogopt1);
+        mvwprintw(borda, yborda / 2 - 6, (xborda - strlen(stringlogopt2)) / 2, "%s", stringlogopt2);
+        mvwprintw(borda, yborda / 2 - 5, (xborda - strlen(stringlogopt3)) / 2, "%s", stringlogopt3);
+        mvwprintw(borda, yborda / 2 - 4, (xborda - strlen(stringlogopt4)) / 2, "%s", stringlogopt4);
     
-    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha noavmente a borda da janela
-    wrefresh(borda);
+        wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');  //desenha noavmente a borda da janela
+        wrefresh(borda);
 
-    for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
+        for(int a = 0; a < opcoes; a++) {  //loop de print das opções do menu e atualização do efeito de seleção dentro do menu
 
-        if(a == highlight) {
+            if(a == highlight) {
 
-            wattron(MenuOpcoes, A_REVERSE);
+                wattron(MenuOpcoes, A_REVERSE);
+
+            }
+
+            mvwprintw(MenuOpcoes, a + 1, (30 - strlen(menuescolhas[a])) / 2, "%s", menuescolhas[a]);
+            wattroff(MenuOpcoes, A_REVERSE);
 
         }
 
-        int x = (23 - strlen(menuescolhas[a])) / 2;  //variável utilizada para centralização de opções dentro do menu, 22 representa o comprimento da janela MenuOpcoes
-        mvwprintw(MenuOpcoes, a + 1, x, "%s", menuescolhas[a]);
-        wattroff(MenuOpcoes, A_REVERSE);
+        wborder(MenuOpcoes, '#', '#', '-', '-', '-', '-', '-', '-');
+        wrefresh(MenuOpcoes);
 
-    }
+        opcao = wgetch(MenuOpcoes);
 
-    wborder(MenuOpcoes, '#', '#', '-', '-', '-', '-', '-', '-');
-    wrefresh(MenuOpcoes);
+        switch(opcao) {
 
-    opcao = wgetch(MenuOpcoes);
-
-    switch(opcao) {
-
-        case KEY_UP: 
-        highlight--;
+            case KEY_UP: 
+            highlight--;
         
-           if(highlight < 0) {
+               if(highlight < 0) {
 
-                highlight = 0;
+                    highlight = 0;
 
-            }
-            break;
-
-            case KEY_DOWN:
-            highlight++;
-            if(highlight >= opcoes) {  // if que garante que o usuário não selecione opções fora do menu
-
-                highlight = opcoes - 1;
-
-            }
-            break;
-
-            case '\n':  //case que representa o que cada opção faz
-            switch(highlight) {
-
-                case 0:
-                CadastrarSerie(EntradaInfo);
+                }
                 break;
 
-                case 1:
-                AlterarSerie(EntradaInfo);
+                case KEY_DOWN:
+                highlight++;
+                if(highlight >= opcoes) {  // if que garante que o usuário não selecione opções fora do menu
+
+                    highlight = opcoes - 1;
+
+                }
                 break;
 
-                case 2:
-                RemoverSerie(EntradaInfo);
-                break;
+                case '\n':  //case que representa o que cada opção faz
+                switch(highlight) {
 
-                case 3:
-                ListaSerie();
-                break;
+                    case cadastrarSerie:
+                    CadastrarSerie(EntradaInfo);
+                    break;
 
-                case 4:
-                ListarPorGenero(EntradaInfo);
-                break;
+                    case alterarSerie:
+                    AlterarSerie(EntradaInfo);
+                    break;
 
-                case 5:
-                PesquisarSerie(EntradaInfo);
-                break;
+                    case removerSerie:
+                    RemoverSerie(EntradaInfo);
+                    break;
 
-                case 6:
-                endwin();
-                exit(0);
+                    case listarSeries:
+                    ListarSeries();
+                    break;
+
+                    case listarPorGenero:
+                    ListarPorGenero(EntradaInfo);
+                    break;
+
+                    case pesquisarSerie:
+                    PesquisarSerie(EntradaInfo);
+                    break;
+
+                    case plataformaMaisAssistida:
+                    PlataformaMaisAssistida();
+                    break;
+
+                    case generoMaisAssistido:
+                    GeneroMaisAssistido();
+                    break;
+                    
+                    case sair:
+                    endwin();
+                    exit(0);
+                    break;
+    
+                    default:
+                    break;
+
+                }
                 break;
 
                 default:
                 break;
-
-            }
-            break;
-
-            default:
-            break;
             
         }
 
@@ -178,19 +186,17 @@ void MenuSecundario(WINDOW *EntradaInfo) {
 
 void CadastrarSerie(WINDOW *EntradaInfo) {
 
-    setbuf(stdin, NULL);
+    setbuf(stdin, NULL); //configurações do ncurses para a função CadastrarSerie
     curs_set(TRUE);
     cbreak();
     echo();
     
-    QuantidadeSeries++;
+    QuantidadeSeries++;  //aumenta em 1 a variável QuantidadeSeries para realocar o tamanho do vetor de struct que contém as séries
     char *StringAux = (char*) malloc (4 * sizeof(char)); //string auxiliar para coleta de inteiro
     serie = (Serie*) realloc(serie, QuantidadeSeries * sizeof(Serie));  //realoca para novo tamanho
     serie[QuantidadeSeries - 1].id = QuantidadeSeries;  //atribuição de id para a nova série a ser colocada
 
     ColetaNomeCadastrarSerie:
-    clear();
-    refresh();
     wclear(borda);
     wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
     wrefresh(borda);
@@ -726,7 +732,7 @@ void RemoverSerie(WINDOW *EntradaInfo) {
 
 }
 
-void ListaSerie() {
+void ListarSeries() {
 
     keypad(borda, TRUE);
     cbreak();
@@ -870,12 +876,13 @@ void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
     int yopcao = 0;
     int highlight = 0;
     int opcao;
-    int Contador = 0;
+    int ContadorGenero = 0;
+    int ContadorQuantidadeSeries = 0;
     int IntAux;
     OpcoesMin = 0;
-    OpcoesMax = 30;
+    OpcoesMax = yborda - 2;
 
-    char *StringAux = (char*) malloc(sizeof(char) * 60);
+    char *StringAux = (char*) malloc(sizeof(char) * 31);
 
     int *IndicesSeries = (int*) malloc(sizeof(int));
 
@@ -890,39 +897,64 @@ void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
     wrefresh(borda);
     move(yterminal / 2 + 1, (xterminal - (xborda - 30)) / 2 + 2);
     refresh();
-    getnstr(StringAux, 60);
+    getnstr(StringAux, 31);
     setbuf(stdin, NULL);
 
-    for(int a = 0; a < QuantidadeSeries; a++) {
+    for(int a = 0; a < QuantidadeSeries; a++) {  //for
+        
+        for(int b = 0; b <= strlen(serie[a].Genero); b++) {  //for
 
-        if(strcasecmp(StringAux, serie[a].Genero) == 0) {
+            if(tolower(serie[a].Genero[b]) == tolower(StringAux[ContadorGenero])) { //if de comparação por caractere entre a string inserida pelo usuário e a string de genero da série
 
-            IndicesSeries[Contador] = a;
-            Contador++;
-            IndicesSeries = (int*) realloc(IndicesSeries, sizeof(int) * (Contador + 1));
-            
-        }
+                ContadorGenero++;
 
-    }
+            }//if #
+            else {  //else
 
-    IndicesSeries = (int*) realloc(IndicesSeries, sizeof(int) * (Contador - 1));
+                ContadorGenero = 0;
 
-    clear();
-    refresh();
+            }  //else #
+
+            if(ContadorGenero == strlen(StringAux)) {  //if
+
+                IndicesSeries[ContadorQuantidadeSeries] = a;
+                ContadorQuantidadeSeries++;
+                IndicesSeries = (int*) realloc(IndicesSeries, sizeof(int) * (ContadorQuantidadeSeries + 1));
+                ContadorGenero = 0;
+
+            }  //if #
+       
+        }  //for #
+
+    }  //for #
+
+    // IndicesSeries = (int*) realloc(IndicesSeries, sizeof(int) * (ContadorQuantidadeSeries - 1));  //realoca para uma quantidade a menos após o loop pois o loop aloca de forma a obter um espaço a mais no vetor
+
     keypad(borda, TRUE);
     curs_set(FALSE);
     noecho();
     cbreak();
+
+    int MaxSeriesPorPagina = yborda - 2;
 
     while (1) {
 
         wclear(borda);
         yopcao = 0;
 
+        if(ContadorQuantidadeSeries < OpcoesMax) {
+
+            OpcoesMax = ContadorQuantidadeSeries;
+            MaxSeriesPorPagina = ContadorQuantidadeSeries;
+
+        }
+
         for (int a = OpcoesMin; a < OpcoesMax; a++) {
 
             if (a == highlight) {
+
                 wattron(borda, A_REVERSE);
+
             }
 
             IntAux = IndicesSeries[a];
@@ -933,23 +965,66 @@ void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
 
         }
 
-        IntAux = IndicesSeries[highlight];
         wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-');
-        mvwprintw(borda, (yborda - 8) / 2, xborda / 2 + 6, "ID: %i", serie[IntAux].id);
-        mvwprintw(borda, (yborda - 8) / 2 + 2, xborda / 2 + 6, "Genero: %s", serie[IntAux].Genero);
-        mvwprintw(borda, (yborda - 8) / 2 + 3, xborda / 2 + 6, "Classificacao: %i", serie[IntAux].id);
-        mvwprintw(borda, (yborda - 8) / 2 + 4, xborda / 2 + 6, "Plataforma: %s", serie[IntAux].Plataforma);
-        mvwprintw(borda, (yborda - 8) / 2 + 5, xborda / 2 + 6, "Quantidade de temporadas: %i", serie[IntAux].QuantidadeTemporadas);
-        mvwprintw(borda, (yborda - 8) / 2 + 6, xborda / 2 + 6, "Quantidade total de episodios: %i", serie[IntAux].QuantidadeEpisodiosTotais);
-        mvwprintw(borda, (yborda - 8) / 2 + 7, xborda / 2 + 6, "Quantidade de episodios por temporada: ");
+        IntAux = IndicesSeries[highlight];
 
+        char *StringAux2 = (char*) malloc(sizeof(char) * 100);
+        strcpy(StringAux2, "Nome: ");
+        strcat(StringAux2, serie[IntAux].Nome);
+        mvwprintw(borda, (yborda - 8) / 2 - 2, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+
+        sprintf(StringAux2, "ID: %i", serie[IntAux].id);
+        mvwprintw(borda, (yborda - 8) / 2, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+
+        strcpy(StringAux2, "Genero: ");
+        strcat(StringAux2, serie[IntAux].Genero);
+        mvwprintw(borda, (yborda - 8) / 2 + 2, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+    
+        sprintf(StringAux2, "Classficacao: %i", serie[IntAux].Classificacao);
+        mvwprintw(borda, (yborda - 8) / 2 + 3, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+    
+        strcpy(StringAux2, "Plataforma: ");
+        strcat(StringAux2, serie[IntAux].Plataforma);
+        mvwprintw(borda, (yborda - 8) / 2 + 4, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+    
+        sprintf(StringAux2, "Quantidade de temporadas: %i", serie[IntAux].QuantidadeTemporadas);
+        mvwprintw(borda, (yborda - 8) / 2 + 5, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+    
+        sprintf(StringAux2, "Quantidade total de episodios: %i", serie[IntAux].QuantidadeEpisodiosTotais);
+        mvwprintw(borda, (yborda - 8) / 2 + 6, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+    
+        char *StringAux1 = (char*) malloc(sizeof(char) * 500);
+
+        strcpy(StringAux2, " ");
         for(int a = 0; a < serie[IntAux].QuantidadeTemporadas; a++) {
 
-            wprintw(borda, "%i ", serie[IntAux].QuantidadeEpisodiosPorTemporada[a]);
+            if(a > 20) {
+    
+                break;
+
+            }
+            sprintf(StringAux1, "%i ", serie[IntAux].QuantidadeEpisodiosPorTemporada[a]);
+            strcat(StringAux2, StringAux1);
 
         }
+    
+        strcpy(StringAux1, StringAux2);
+        strcpy(StringAux2, "Quantidade de episodios por temporada:");
+        strcat(StringAux2, StringAux1);
+        mvwprintw(borda, (yborda - 8) / 2 + 7, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
 
-        mvwprintw(borda, (yborda - 8) / 2 + 8, xborda / 2 + 6, "Duracao media dos episodios: %i", serie[IntAux].DuracaoMediaEpisodios);
+        sprintf(StringAux2, "Duracao media dos episodios: %i", serie[IntAux].DuracaoMediaEpisodios);
+        mvwprintw(borda, (yborda - 8) / 2 + 8, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+
+        sprintf(StringAux2, "Quantidade total de series encontradas: %i", ContadorQuantidadeSeries);
+        mvwprintw(borda, (yborda - 8) / 2 + 10, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+
+        sprintf(StringAux2, "Posicao: %i", highlight + 1);
+        mvwprintw(borda, (yborda - 8) / 2 + 11, (xborda - strlen(StringAux2)) / 2, "%s", StringAux2);
+
+        mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
+        wrefresh(borda);
+
         mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione S para sair")) / 2, "Pressione S para sair");
         wrefresh(borda);
 
@@ -958,31 +1033,45 @@ void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
         switch (opcao) {
             case KEY_DOWN:
                 highlight++;
-                if (highlight >= OpcoesMax) {
+                if(highlight >= ContadorQuantidadeSeries - 1) {
 
-                    highlight = Contador - 1;
-                    OpcoesMax = highlight + 1;
-                    OpcoesMin = OpcoesMax - 30;
+                    highlight = ContadorQuantidadeSeries - 1;
 
                 }
-                break;
+                if (highlight >= OpcoesMax) {
 
-            case KEY_UP:
-                if (highlight > 0) {
-                    highlight--;
-                    if (highlight < OpcoesMin) {
+                    OpcoesMax = highlight + 1;
+                    if(OpcoesMax > ContadorQuantidadeSeries) {
 
-                        OpcoesMin = highlight;
-                        OpcoesMax = OpcoesMin + 30;
+                        OpcoesMax = highlight + 1;
 
                     }
+                    OpcoesMin = OpcoesMax - MaxSeriesPorPagina;
+
                 }
             break;
 
+            case KEY_UP:
+                highlight--;
+                if (highlight < 0) {
+
+                    highlight = 0;
+
+                }
+
+                if (highlight < OpcoesMin) {
+
+                    OpcoesMin = highlight;
+                    OpcoesMax = OpcoesMin + MaxSeriesPorPagina;
+
+                }
+
+            break;
+
             case 's':
-                return;
-
-
+            free(StringAux1);
+            free(StringAux2);
+            return;
         
         }
         
@@ -994,7 +1083,8 @@ void ListarPorGenero(WINDOW *EntradaInfo) {  //PRECISA SER COMPLETADO
         // mvwprintw(borda, (yborda - 8) / 2 + 6, xborda / 2 + 10, "Quantidade total de episodios: %i", serie[highlight].QuantidadeEpisodiosTotais);
         // mvwprintw(borda, (yborda - 8) / 2 + 7, xborda / 2 + 10, "Quantidade de episodios por temporada: ");
     }
-}
+
+}  //ListarPorGenero #
 
 void PesquisarSerie(WINDOW *EntradaInfo) {
 
@@ -1103,6 +1193,143 @@ void PesquisarSerie(WINDOW *EntradaInfo) {
     
     getch();
 
+    free(StringAux);
+
+    return;
+
+}
+
+void PlataformaMaisAssistida() {
+
+    curs_set(FALSE);
+
+    int *contagemPlataformas = (int*)calloc(QuantidadeSeries, sizeof(int));
+    int contadorSeriesPlataforma = 0;
+    StringAux = (char*) malloc(sizeof(char) * 100);
+
+    // Percorre todas as séries e incrementa a contagem da plataforma correspondente
+    for (int i = 0; i < QuantidadeSeries; i++)
+    {
+        contagemPlataformas[i] = 0;
+        for (int j = 0; j < QuantidadeSeries; j++)
+        {
+            if (strcasecmp(serie[i].Plataforma, serie[j].Plataforma) == 0)
+            {
+                contagemPlataformas[i]++;
+            }
+        }
+    }
+
+    // Encontra o índice da plataforma mais assistida
+    int indicePlataformaMaisAssistida = 0;
+    for (int i = 1; i < QuantidadeSeries; i++)
+    {
+
+        if (contagemPlataformas[i] > contagemPlataformas[indicePlataformaMaisAssistida]) { 
+
+            indicePlataformaMaisAssistida = i;
+
+        }
+
+    }
+
+    for(int a = 0; a < QuantidadeSeries; a++) {
+
+        if(strcasecmp(serie[a].Plataforma, serie[indicePlataformaMaisAssistida].Plataforma) == 0) {
+
+            contadorSeriesPlataforma++;
+
+        }
+
+    }
+
+    clear();
+    refresh();
+    wclear(borda);
+
+    strcpy(StringAux, "A plataforma mais assistida eh: ");
+    strcat(StringAux, serie[indicePlataformaMaisAssistida].Plataforma);
+    mvwprintw(borda, yborda / 2, (xborda - strlen(StringAux)) / 2, StringAux);
+    
+    sprintf(StringAux, "A plataforma %s possui %i series cadastradas", serie[indicePlataformaMaisAssistida].Plataforma, contadorSeriesPlataforma);
+    mvwprintw(borda, yborda / 2 + 1, (xborda - strlen(StringAux)) / 2, StringAux);
+
+    mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione qualquer tecla para prosseguir")) / 2, "Pressione qualquer tecla para prosseguir");
+
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-'); 
+    wrefresh(borda);
+    getch();
+
+    free(StringAux);
+    free(contagemPlataformas);
+
+    return;
+
+}
+
+void GeneroMaisAssistido() {
+
+    curs_set(FALSE);
+
+    int *contagemGeneros = (int*)calloc(QuantidadeSeries, sizeof(int));
+    StringAux = (char*) malloc(sizeof(char) * 100);
+    int contadorSeriesGenero = 0;
+
+    // Percorre todas as séries e incrementa a contagem do gênero correspondente
+    for (int i = 0; i < QuantidadeSeries; i++)
+    {
+        contagemGeneros[i] = 0;
+        for (int j = 0; j < QuantidadeSeries; j++)
+        {
+                
+            if(strcasecmp(serie[i].Genero, serie[j].Genero) == 0) {
+
+                contagemGeneros[i]++;
+                
+            }
+
+        }
+
+    }
+
+    // Encontra o índice do gênero mais assistido
+    int indiceGeneroMaisAssistido = 0;
+    for (int i = 1; i < QuantidadeSeries; i++)
+    {
+        if (contagemGeneros[i] > contagemGeneros[indiceGeneroMaisAssistido])
+        {
+            indiceGeneroMaisAssistido = i;
+        }
+    }
+
+    for(int a = 0; a < QuantidadeSeries; a++) {
+
+        if(strcasecmp(serie[a].Genero, serie[indiceGeneroMaisAssistido].Genero) == 0) {
+
+            contadorSeriesGenero++;
+
+        }
+
+    }
+
+    clear();
+    refresh();
+    wclear(borda);
+
+    strcpy(StringAux, "O genero mais assistido eh: ");
+    strcat(StringAux, serie[indiceGeneroMaisAssistido].Genero);
+    mvwprintw(borda, yborda / 2, (xborda - strlen(StringAux)) / 2, StringAux);
+    
+    sprintf(StringAux, "O genero %s possui %i series cadastradas", serie[indiceGeneroMaisAssistido].Genero, contadorSeriesGenero);
+    mvwprintw(borda, yborda / 2 + 1, (xborda - strlen(StringAux)) / 2, StringAux);
+
+    mvwprintw(borda, yborda - 2, (xborda - strlen("Pressione qualquer tecla para prosseguir")) / 2, "Pressione qualquer tecla para prosseguir");
+
+    wborder(borda, '#', '#', '-', '-', '-', '-', '-', '-'); 
+    wrefresh(borda);
+    getch();
+
+    free(contagemGeneros);
     free(StringAux);
 
     return;
