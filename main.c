@@ -351,7 +351,7 @@ void MensagemBoasVindas() {
                 
                 wclear(borda);
                 arquivobinSeries = fopen("arquivobinSeries.dat", "wb");
-                arquivotexto = fopen("streaming_db.txt", "r");
+                arquivotexto = fopen("streaming_db.csv", "r");
 
                 if(arquivobinSeries == NULL) {  //printa o retorno do ponteiro de arquivo binário das séries
 
