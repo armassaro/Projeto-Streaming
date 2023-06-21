@@ -13,7 +13,7 @@ int main() {
 
     getmaxyx(stdscr, yterminal, xterminal);  //consegue os valores máximos de resolução do terminal
     
-    arquivotexto = fopen("streaming_db.txt", "r");
+    arquivotexto = fopen("streaming_db.csv", "r");
     arquivobinSeries = fopen("arquivobinSeries.dat", "rb");
     // arquivobinHistorico = fopen("arquivobinHistorico.dat", "rb");
     
