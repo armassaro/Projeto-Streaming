@@ -53,7 +53,7 @@ int main() {
 
     }//for
 
-    MenuOpcoes = newwin(11, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
+    MenuOpcoes = newwin(12, 30, yterminal / 2 + 1, (xterminal - 30) / 2);  //ponteiro da janela de opções
 
     keypad(MenuOpcoes, TRUE);  //habilita entrada de setas
     werase(MenuOpcoes);
